@@ -1,0 +1,46 @@
+{
+	"head": { лозунги сверху
+		"one": "Главный лозунг",
+		"one_or": позиционирование: 1-left, 2-center, 3-right
+		"one_col": цвет шрифта
+		"two": "Второй лозунг",
+		"two_or": позиционирование: 1-left, 2-center, 3-right
+		"two_col": "цвет шрифта
+	},
+	"top_panel": { лента сверху
+		"color": цвет шрифта
+		"back_type": тип фона: 1-моно, 2-градиент, 3-тройной градиент с повторением
+		"back_color": цвета
+		"height": высота 1-50пк 2-100
+		"articles": { статьи
+			"about": 12, название на панели b yjvth
+			"contact": 8
+		}
+	},
+	"main_panel": { основная панель сбоку
+		"position": положение: 1-left, 2-none, 3- right
+		"color": цвет шрифта
+		"back_title": фон заголовков
+		"back_main": фон текста
+		"subscribe": разрешить ли подписку на почту trrue/false
+		"news": разрешить ли новости trrue/false
+		"brenchs": разрешить ли рубрики trrue/false
+		"archives": разрешить ли архив trrue/false
+	},
+	"content": { основной контент
+		"background": фото на фоне
+		"back_color": цвет главного блока
+		"font_color": цвет шрифта
+		"title_color": цвет заголовков
+		"opacity": прозрачность главного блока
+	},
+	"main": {
+		"comments": разрешить комментирование trrue/false
+	},
+	"button": { кнопки
+		"background": цвет фона
+		"color": цвет шрифта
+		"volime": объёмность
+		"flow": плавность краёв
+	}
+}

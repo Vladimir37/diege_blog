@@ -20,10 +20,14 @@ $(document).ready(function() {
 
 	$('#edit_ui_mt').buttonset();
 	$('#edit_ui_st').buttonset();
+	$('#sort_rib').buttonset();
 	$("#m_tit_color").spectrum(new fabrColor($('#sys3').val()));
 	$("#s_tit_color").spectrum(new fabrColor($('#sys4').val()));
+	$("#rib_font").spectrum(new fabrColor($('#sys5').val()));
+	//var ribbon_col_arr = JSON.parse($('#sys5').val());
 
-	//Выделение пунктов с лозунгом по умолчанию
+	//Выделение пунктов по системным данным из фрейма
 	$('#mtp' + $('#sys1').val()).click();
 	$('#stp' + $('#sys2').val()).click();
+	$('#rs' + $('#sys6').val()).click();
 });

@@ -9,10 +9,10 @@ var app = express();
 app.use(parser());
 
 app.get('/', function(req, res) {
-	render.jade(res, 'blog/index');
+	render.jade(res, 'blog/pages/index');
 });
 app.get('/admin', function(req, res) {
-	render.jade(res, 'blog/admin');
+	render.jade(res, 'blog/pages/admin');
 });
 app.post('/res', function(req, res) {
 	console.log(req.body);

@@ -8,9 +8,9 @@
 		"two_col": "rgb(0, 0, 0)"
 	},
 	"top_panel": {
-		"color": "white",
-		"back_type": "blue",
-		"back_color": "[red, green]",
+		"color": "rgb(0, 0, 0)",
+		"back_type": 2,
+		"back_color": "[rgb(56, 118, 29), rgb(61, 133, 198)]",
 		"height": "low/large",
 		"articles": {
 			"about": 12,

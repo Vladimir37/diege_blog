@@ -27,9 +27,26 @@ block system
 					label(for="stp3") Справа
 				h3 Цвет
 				input(type="text" id="s_tit_color" name="s_tit_color" value="rgb(0, 0, 0)")
+			br
+			article.edit_block
+				h3 Управление лентой
+				article#sort_rib
+					input(type="radio" name="rib_sort" value="1" id="rs1")
+					label(for="rs1") Однотонная
+					input(type="radio" name="rib_sort" value="2" id="rs2")
+					label(for="rs2") Двухцветная
+					input(type="radio" name="rib_sort" value="3" id="rs3")
+					label(for="rs3") Трёхцветная
+				h4 Цвет шрифта на ленте
+				input(type="text" name="rib_font" id="rib_font" value="rgb(0, 0, 0)")
+				//- input(type="text" id="rib_color_f" name="f_rib_color" value="rgb(0, 0, 0)")
+				//- input(type="text" id="rib_color_s" name="s_rib_color" value="rgb(0, 0, 0)")
 		input(type="submit" value="Отправить")
 	section.data_system
 		input(type="text" id="sys1" value=head.one_or)
 		input(type="text" id="sys2" value=head.two_or)
 		input(type="text" id="sys3" value=head.one_col)
 		input(type="text" id="sys4" value=head.two_col)
+		input(type="text" id="sys5" value=top_panel.color)
+		input(type="text" id="sys6" value=top_panel.back_type)
+		input(type="text" id="sys7" value=top_panel.back_color)
