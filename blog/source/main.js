@@ -21,16 +21,24 @@ $(document).ready(function() {
 	$('#edit_ui_mt').buttonset();
 	$('#edit_ui_st').buttonset();
 	$('#sort_rib').buttonset();
+	$('#pan_main_radio').buttonset();
+	$('#pan_posit').buttonset();
 	$("#m_tit_color").spectrum(new fabrColor($('#sys3').val()));
 	$("#s_tit_color").spectrum(new fabrColor($('#sys4').val()));
 	$("#rib_font").spectrum(new fabrColor($('#sys5').val()));
 	$("#rib_color_f").spectrum(new fabrColor($('#sys7').val()));
 	$("#rib_color_s").spectrum(new fabrColor($('#sys8').val()));
+	$("#panel_color").spectrum(new fabrColor($('#sys11').val()));
+	$("#panel_color_tit").spectrum(new fabrColor($('#sys12').val()));
+	$("#panel_color_li").spectrum(new fabrColor($('#sys13').val()));
 
 	//Выделение пунктов по системным данным из фрейма
 	$('#mtp' + $('#sys1').val()).click();
 	$('#stp' + $('#sys2').val()).click();
 	$('#rs' + $('#sys6').val()).click();
+	$('#mp' + $('#sys9').val()).click();
+	$('#rs' + $('#sys6').val()).click();
+	$('#pp' + $('#sys10').val()).click();
 
 	//Удаление второго цвета
 	$('input[name="rib_sort"]').change(function(){
@@ -41,4 +49,17 @@ $(document).ready(function() {
 			$("#rib_color_s").next().fadeIn();
 		}
 	});
+	//Управление панелью
+	$('input[name="pan_main"]').change(function() {
+		if($('#mp1').is(':checked')) {
+			$('#pan_cont').slideDown();
+		}
+		else {
+			$('#pan_cont').slideUp();
+		}
+	});
+	//Проверка панели при загрузке
+	if($('#mp2').is(':checked')) {
+		$('#pan_cont').hide();
+	}
 });

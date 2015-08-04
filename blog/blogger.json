@@ -19,9 +19,9 @@
 		}
 	},
 	"main_panel": {
-		"enabled": true,
-		"position": "1",
-		"color": "blue",
+		"enabled": 1,
+		"position": 1,
+		"color": "rgb(0, 0, 0)",
 		"back_title": "yellow",
 		"back_main": "brown",
 		"subscribe": false,

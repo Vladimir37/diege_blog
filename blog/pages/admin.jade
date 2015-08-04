@@ -40,8 +40,29 @@ block system
 				h4 Цвет ленты
 				input(type="text" id="rib_color_f" name="f_rib_color" value=top_panel.back_color_f)
 				input(type="text" id="rib_color_s" name="s_rib_color" value=top_panel.back_color_s)
-				h4 Цвет шрифта на ленте
+				h4 Цвет текста на ленте
 				input(type="text" name="rib_font" id="rib_font" value=top_panel.color)
+			br
+			article.edit_block#pan_adm
+				h3 Управление панелью
+				article#pan_main_radio
+					input(type="radio" name="pan_main" value="1" id="mp1")
+					label(for="mp1") Включить
+					input(type="radio" name="pan_main" value="2" id="mp2")
+					label(for="mp2") Отключить
+				article.edit_block#pan_cont
+					h3 Положение панели
+					article#pan_posit
+						input(type="radio" name="pan_pos" value="1" id="pp1")
+						label(for="pp1") Слева
+						input(type="radio" name="pan_pos" value="2" id="pp2")
+						label(for="pp2") Справа
+					h3 Цвет текста на панели
+					input(type="text" name="panel_color" id="panel_color" value=main_panel.color)
+					h3 Цвет фона у заголовков панели 
+					input(type="text" name="panel_color_tit" id="panel_color_tit" value=main_panel.back_title)
+					h3 Цвет фона у строк панели
+					input(type="text" name="panel_color_li" id="panel_color_li" value=main_panel.back_main)
 		input(type="submit" value="Отправить")
 	section.data_system
 		input(type="text" id="sys1" value=head.one_or)
@@ -52,3 +73,8 @@ block system
 		input(type="text" id="sys6" value=top_panel.back_type)
 		input(type="text" id="sys7" value=top_panel.back_color_f)
 		input(type="text" id="sys8" value=top_panel.back_color_s)
+		input(type="text" id="sys9" value=main_panel.enabled)
+		input(type="text" id="sys10" value=main_panel.position)
+		input(type="text" id="sys11" value=main_panel.color)
+		input(type="text" id="sys12" value=main_panel.back_title)
+		input(type="text" id="sys13" value=main_panel.back_main)
