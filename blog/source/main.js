@@ -24,10 +24,21 @@ $(document).ready(function() {
 	$("#m_tit_color").spectrum(new fabrColor($('#sys3').val()));
 	$("#s_tit_color").spectrum(new fabrColor($('#sys4').val()));
 	$("#rib_font").spectrum(new fabrColor($('#sys5').val()));
-	//var ribbon_col_arr = JSON.parse($('#sys5').val());
+	$("#rib_color_f").spectrum(new fabrColor($('#sys7').val()));
+	$("#rib_color_s").spectrum(new fabrColor($('#sys8').val()));
 
 	//Выделение пунктов по системным данным из фрейма
 	$('#mtp' + $('#sys1').val()).click();
 	$('#stp' + $('#sys2').val()).click();
 	$('#rs' + $('#sys6').val()).click();
+
+	//Удаление второго цвета
+	$('input[name="rib_sort"]').change(function(){
+		if($('#rs1').is(':checked')) {
+			$("#rib_color_s").next().fadeOut();
+		}
+		else {
+			$("#rib_color_s").next().fadeIn();
+		}
+	});
 });

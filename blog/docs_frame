@@ -10,7 +10,8 @@
 	"top_panel": { лента сверху
 		"color": цвет шрифта
 		"back_type": тип фона: 1-моно, 2-градиент, 3-тройной градиент с повторением
-		"back_color": цвета
+		"back_color_f": первый цвет
+		"back_color_s": второй цвет
 		"height": высота 1-50пк 2-100
 		"articles": { статьи
 			"about": 12, название на панели b yjvth
@@ -18,7 +19,8 @@
 		}
 	},
 	"main_panel": { основная панель сбоку
-		"position": положение: 1-left, 2-none, 3- right
+		"enabled": существует или нет. true/false
+		"position": позиция 1-слева, 2-справа
 		"color": цвет шрифта
 		"back_title": фон заголовков
 		"back_main": фон текста

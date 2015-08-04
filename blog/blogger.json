@@ -10,7 +10,8 @@
 	"top_panel": {
 		"color": "rgb(0, 0, 0)",
 		"back_type": 2,
-		"back_color": "[rgb(56, 118, 29), rgb(61, 133, 198)]",
+		"back_color_f": "rgb(56, 118, 29)",
+		"back_color_s": "rgb(61, 133, 198)",
 		"height": "low/large",
 		"articles": {
 			"about": 12,
@@ -18,7 +19,8 @@
 		}
 	},
 	"main_panel": {
-		"position": "right",
+		"enabled": true,
+		"position": "1",
 		"color": "blue",
 		"back_title": "yellow",
 		"back_main": "brown",
