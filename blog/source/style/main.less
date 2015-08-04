@@ -1,0 +1,99 @@
+body {
+	margin: 0;
+	.wrapper {
+		width: 960px;
+		margin: 0 auto;
+		border: 1px solid red;
+		padding: 10px;
+		h1 {
+			font-size: 40px;
+			margin: 15px;
+		}
+		h2 {
+			margin-left: 15px;
+		}
+		.ribbon {
+			width: 100%;
+			height: 100px;
+			background: green;
+		}
+			.content {
+				width: 615px;
+				float: right;
+				.post {
+					margin-bottom: 20px;
+					border-bottom: 1px solid black;
+					.in {
+						display: inline-block;
+						padding: 0 5px;
+						&:not(:first-of-type) {
+							border-left: 1px dotted grey;
+						}
+					}
+					.but_read {
+						padding: 10px;
+						font-weight: bold;
+						font-size: 18px;
+						float: right;
+						border: 1px solid black;
+						margin-bottom: 10px;
+					}
+				}
+			}
+			.panel {
+				width: 300px;
+				float: left;
+				background: lighten(blue, 10%);
+				.pan {
+					width: 100%;
+					border: 1px solid red;
+					article {
+						padding: 4px;
+						border-bottom: 1px solid black;
+						color: white;
+						box-sizing: border-box;
+					}
+					.pan_title {
+						font-size: 20px;
+						font-weight: bold;
+						text-transform: uppercase;
+					}
+					.pan_list {
+						padding-left: 20px;
+					}
+				}
+			}
+			.editing {
+				border: 1px solid black;
+			}
+	}
+	.back {
+		z-index: -1;
+	}
+}
+.system {
+	.editing {
+		width: 960px;
+		margin: 0 auto;
+		text-align: center;
+		.edit_block {
+			display: inline-block;
+			padding: 15px;
+			border: 2px solid black;
+			text-align: center;
+			margin: 10px;
+			.titles {
+				font-size: 18px;
+				width: 90%;
+				margin-bottom: 5px;
+			}
+		}
+	}
+}
+.clearfix {
+	clear: both;
+	width: 100%;
+}
+.data_system {
+	display: none;
+}

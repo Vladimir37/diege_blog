@@ -1,0 +1,46 @@
+{
+	"head": {
+		"one": "Главный лозунг",
+		"one_or": "2",
+		"one_col": "rgb(0, 0, 0)",
+		"two": "Немного всякого хлама",
+		"two_or": "3",
+		"two_col": "rgb(0, 0, 0)"
+	},
+	"top_panel": {
+		"color": "white",
+		"back_type": "blue",
+		"back_color": "[red, green]",
+		"height": "low/large",
+		"articles": {
+			"about": 12,
+			"contact": 8
+		}
+	},
+	"main_panel": {
+		"position": "right",
+		"color": "blue",
+		"back_title": "yellow",
+		"back_main": "brown",
+		"subscribe": false,
+		"news": true,
+		"brenchs": true,
+		"archives": true
+	},
+	"content": {
+		"background": "1.png",
+		"back_color": "green",
+		"font_color": "black",
+		"title_color": "black",
+		"opacity": 0.9
+	},
+	"main": {
+		"comments": true
+	},
+	"button": {
+		"background": "yellow",
+		"color": "black",
+		"volime": true,
+		"flow": false
+	}
+}

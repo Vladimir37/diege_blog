@@ -1,0 +1,43 @@
+doctype
+html(lang="ru")
+	head
+		meta(charset="UTF-8")
+		title Document
+		link(rel="stylesheet/less" type="text/css" href="source/style/main.less")
+		script(src="source/less.js")
+		script(src="source/jquery.js")
+		script(src="source/spectrum.js")
+		script(src="source/main.js")
+		script(src="source/style/jquery-ui.min.js")
+		link(rel="stylesheet", href="source/style/jquery-ui.min.css")
+		link(rel="stylesheet", href="source/style/jquery-ui.structure.min.css")
+		link(rel="stylesheet", href="source/style/jquery-ui.theme.min.css")
+		link(rel="stylesheet", href="source/spectrum.css")
+		mixin post(name, text, date, comments, link, branch)
+			section.post
+				h3=name
+				article.info
+					article.date.in=date
+					article.branch.in
+						a(href=branch)=branch
+					article.comments.in 
+						a(href=link) #{comments} комментариев
+				article.data
+					p=text
+				a(href=link)
+					article.but_read Читать
+					article.clearfix
+	body
+		section.back
+		section.wrapper
+			h1=head.one
+			h2=head.two
+			article.ribbon
+				block ribbon
+			section.content
+				block content
+			section.system
+				block system
+			section.panel
+				block panel
+			article.clearfix
