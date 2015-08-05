@@ -51,18 +51,44 @@ block system
 					input(type="radio" name="pan_main" value="2" id="mp2")
 					label(for="mp2") Отключить
 				article.edit_block#pan_cont
-					h3 Положение панели
+					h4Положение панели
 					article#pan_posit
 						input(type="radio" name="pan_pos" value="1" id="pp1")
 						label(for="pp1") Слева
 						input(type="radio" name="pan_pos" value="2" id="pp2")
 						label(for="pp2") Справа
-					h3 Цвет текста на панели
+					h4 Цвет текста на панели
 					input(type="text" name="panel_color" id="panel_color" value=main_panel.color)
-					h3 Цвет фона у заголовков панели 
+					h4 Цвет фона у заголовков панели 
 					input(type="text" name="panel_color_tit" id="panel_color_tit" value=main_panel.back_title)
-					h3 Цвет фона у строк панели
+					h4 Цвет фона у строк панели
 					input(type="text" name="panel_color_li" id="panel_color_li" value=main_panel.back_main)
+					h4 Новые записи
+					article.perm
+						input(type="radio" name="news" value="1" id="news1")
+						label(for="news1") Скрыть
+						input(type="radio" name="news" value="2" id="news2")
+						label(for="news2") Показать
+					h4 Рубрики
+					article.perm
+						input(type="radio" name="bench" value="1" id="bench1")
+						label(for="bench1") Скрыть
+						input(type="radio" name="bench" value="2" id="bench2")
+						label(for="bench2") Показать
+					h4 Архив
+					article.perm
+						input(type="radio" name="arc" value="1" id="arc1")
+						label(for="arc1") Скрыть
+						input(type="radio" name="arc" value="2" id="arc2")
+						label(for="arc2") Показать
+			br
+			article.edit_block
+				h3 Главный блок
+				h4 Цвет основого блока
+				input(type="text" id="back_cont" name="back_cont" value=content.back_color)
+				input(type="hidden" name="opacity" id="opacity" value=content.opacity)
+				h4 Прозрачность основного блока
+				#slide_opacity
 		input(type="submit" value="Отправить")
 	section.data_system
 		input(type="text" id="sys1" value=head.one_or)
@@ -78,3 +104,8 @@ block system
 		input(type="text" id="sys11" value=main_panel.color)
 		input(type="text" id="sys12" value=main_panel.back_title)
 		input(type="text" id="sys13" value=main_panel.back_main)
+		input(type="text" id="sys14" value=main_panel.news)
+		input(type="text" id="sys15" value=main_panel.brenchs)
+		input(type="text" id="sys16" value=main_panel.archives)
+		input(type="text" id="sys17" value=content.back_color)
+		input(type="text" id="sys18" value=content.opacity)

@@ -24,10 +24,9 @@
 		"color": цвет шрифта
 		"back_title": фон заголовков
 		"back_main": фон текста
-		"subscribe": разрешить ли подписку на почту trrue/false
-		"news": разрешить ли новости trrue/false
-		"brenchs": разрешить ли рубрики trrue/false
-		"archives": разрешить ли архив trrue/false
+		"news": разрешить ли новости 1/2
+		"brenchs": разрешить ли рубрики 1/2
+		"archives": разрешить ли архив 1/2
 	},
 	"content": { основной контент
 		"background": фото на фоне
@@ -37,7 +36,7 @@
 		"opacity": прозрачность главного блока
 	},
 	"main": {
-		"comments": разрешить комментирование trrue/false
+		"comments": разрешить комментирование 1/2
 	},
 	"button": { кнопки
 		"background": цвет фона

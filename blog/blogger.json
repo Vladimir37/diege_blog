@@ -24,17 +24,16 @@
 		"color": "rgb(0, 0, 0)",
 		"back_title": "yellow",
 		"back_main": "brown",
-		"subscribe": false,
-		"news": true,
-		"brenchs": true,
-		"archives": true
+		"news": 2,
+		"brenchs": 2,
+		"archives": 2
 	},
 	"content": {
 		"background": "1.png",
-		"back_color": "green",
+		"back_color": "rgb(255, 255, 255)",
 		"font_color": "black",
 		"title_color": "black",
-		"opacity": 0.9
+		"opacity": 0.8
 	},
 	"main": {
 		"comments": true

@@ -23,6 +23,7 @@ $(document).ready(function() {
 	$('#sort_rib').buttonset();
 	$('#pan_main_radio').buttonset();
 	$('#pan_posit').buttonset();
+	$('.perm').buttonset();
 	$("#m_tit_color").spectrum(new fabrColor($('#sys3').val()));
 	$("#s_tit_color").spectrum(new fabrColor($('#sys4').val()));
 	$("#rib_font").spectrum(new fabrColor($('#sys5').val()));
@@ -31,6 +32,7 @@ $(document).ready(function() {
 	$("#panel_color").spectrum(new fabrColor($('#sys11').val()));
 	$("#panel_color_tit").spectrum(new fabrColor($('#sys12').val()));
 	$("#panel_color_li").spectrum(new fabrColor($('#sys13').val()));
+	$("#back_cont").spectrum(new fabrColor($('#sys17').val()));
 
 	//Выделение пунктов по системным данным из фрейма
 	$('#mtp' + $('#sys1').val()).click();
@@ -39,6 +41,9 @@ $(document).ready(function() {
 	$('#mp' + $('#sys9').val()).click();
 	$('#rs' + $('#sys6').val()).click();
 	$('#pp' + $('#sys10').val()).click();
+	$('#news' + $('#sys14').val()).click();
+	$('#bench' + $('#sys15').val()).click();
+	$('#arc' + $('#sys16').val()).click();
 
 	//Удаление второго цвета
 	$('input[name="rib_sort"]').change(function(){
@@ -61,5 +66,15 @@ $(document).ready(function() {
 	//Проверка панели при загрузке
 	if($('#mp2').is(':checked')) {
 		$('#pan_cont').hide();
-	}
+	};
+	//Управление прозрачностью
+	$('#slide_opacity').slider({
+		range: "min",
+		value: $('#sys18').val()*10,
+		min: 5,
+		max: 10,
+		slide: function( event, ui ) {
+			$("#opacity").val(ui.value/10);
+		}
+	})
 });
