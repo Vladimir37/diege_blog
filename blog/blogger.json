@@ -36,12 +36,12 @@
 		"opacity": 0.8
 	},
 	"main": {
-		"comments": true
+		"comments": 1
 	},
 	"button": {
 		"background": "yellow",
 		"color": "black",
-		"volime": true,
-		"flow": false
+		"volime": 1,
+		"flow": 1
 	}
 }

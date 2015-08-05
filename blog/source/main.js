@@ -18,12 +18,15 @@ $(document).ready(function() {
     	]
 	};
 
+	//Кнопки выбора
 	$('#edit_ui_mt').buttonset();
 	$('#edit_ui_st').buttonset();
 	$('#sort_rib').buttonset();
 	$('#pan_main_radio').buttonset();
 	$('#pan_posit').buttonset();
 	$('.perm').buttonset();
+
+	//Выбор цвета
 	$("#m_tit_color").spectrum(new fabrColor($('#sys3').val()));
 	$("#s_tit_color").spectrum(new fabrColor($('#sys4').val()));
 	$("#rib_font").spectrum(new fabrColor($('#sys5').val()));
@@ -33,6 +36,10 @@ $(document).ready(function() {
 	$("#panel_color_tit").spectrum(new fabrColor($('#sys12').val()));
 	$("#panel_color_li").spectrum(new fabrColor($('#sys13').val()));
 	$("#back_cont").spectrum(new fabrColor($('#sys17').val()));
+	$("#color_main_tit").spectrum(new fabrColor($('#sys20').val()));
+	$("#color_main_te").spectrum(new fabrColor($('#sys19').val()));
+	$("#but_col").spectrum(new fabrColor($('#but_col').val()));
+	$("#but_back").spectrum(new fabrColor($('#but_back').val()));
 
 	//Выделение пунктов по системным данным из фрейма
 	$('#mtp' + $('#sys1').val()).click();
@@ -44,6 +51,9 @@ $(document).ready(function() {
 	$('#news' + $('#sys14').val()).click();
 	$('#bench' + $('#sys15').val()).click();
 	$('#arc' + $('#sys16').val()).click();
+	$('#vol' + $('#sys21').val()).click();
+	$('#flo' + $('#sys22').val()).click();
+	$('#com' + $('#sys23').val()).click();
 
 	//Удаление второго цвета
 	$('input[name="rib_sort"]').change(function(){
