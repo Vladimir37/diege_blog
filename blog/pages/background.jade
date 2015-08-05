@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	section.ent_back
+		form(action="edit_pic" method="post")
+			- for(var i = 0; i < added.length; i++)
+				- var path = 'source/back-blog/' + added[i]
+				input(type="radio" name="pic" value=added[i] id=added[i])
+				label(for=added[i])
+					img(src=path, alt="pic")

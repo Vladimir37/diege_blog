@@ -2,14 +2,15 @@ var fs = require('fs');
 var jade = require('jade');
 
 //Рендеринг jade
-function renderJade(res, name) {
+function renderJade(res, name, addon) {
 	fs.readFile('blog/blogger.json', function(err, data) {
 	if(err) {
 		console.log(err);
 	}
 	else {
 		frame = JSON.parse(data);
-		jade.renderFile(name+'.jade', frame, function(error, resp) {
+		frame.added = addon;
+		jade.renderFile('blog/pages/' + name + '.jade', frame, function(error, resp) {
 		if(err) {
 			console.log(error);
 		}

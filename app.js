@@ -10,18 +10,20 @@ var app = express();
 app.use(parser());
 
 app.get('/', function(req, res) {
-	render.jade(res, 'blog/pages/index');
+	render.jade(res, 'index');
 });
 app.get('/admin', function(req, res) {
-	render.jade(res, 'blog/pages/admin');
+	render.jade(res, 'admin');
 });
 app.post('/res', function(req, res) {
-	control.editing(req.body);
+	control.editing(req.body); 
 	res.end();
 });
-app.get('/backgound', function(req, res) {
-	res.end();
-})
+app.get('/background', function(req, res) {
+	fs.readdir('blog/source/back-blog/', function(err, files) {
+		render.jade(res, 'background', files);
+	});
+});
 app.get('/image', function(req, res) {
 	fs.readdir('blog/source/back-blog', function(err, resp) {
 		if(err) {
@@ -34,7 +36,7 @@ app.get('/image', function(req, res) {
 });
 app.get('*', function(req, res) {
 	router.parse(req, res);
-	console.log(req.url);
+	//console.log(req.url);
 });
 
 http.createServer(app).listen(3000);
