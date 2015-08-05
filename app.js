@@ -4,6 +4,7 @@ var router = require('./router');
 var render = require('./render');
 var parser = require('body-parser');
 var fs = require('fs');
+var control = require('./control');
 
 var app = express();
 app.use(parser());
@@ -15,7 +16,7 @@ app.get('/admin', function(req, res) {
 	render.jade(res, 'blog/pages/admin');
 });
 app.post('/res', function(req, res) {
-	console.log(req.body);
+	control.editing(req.body);
 	res.end();
 });
 app.get('/backgound', function(req, res) {

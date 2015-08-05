@@ -37,6 +37,12 @@ block system
 					label(for="rs2") Двухцветная
 					input(type="radio" name="rib_sort" value="3" id="rs3")
 					label(for="rs3") Трёхцветная
+				h4 Толщина ленты
+				article.perm
+					input(type="radio" name="rib_he" value="1" id="he1")
+					label(for="he1") Тонкая
+					input(type="radio" name="rib_he" value="2" id="he2")
+					label(for="he2") Толстая
 				h4 Цвет ленты
 				input(type="text" id="rib_color_f" name="f_rib_color" value=top_panel.back_color_f)
 				input(type="text" id="rib_color_s" name="s_rib_color" value=top_panel.back_color_s)
@@ -123,8 +129,7 @@ block system
 			br
 			article.edit_block
 				input(type="submit" value="Сохранить")
-				input(type="button" id="open_reset")
-				
+
 	section.data_system
 		input(type="text" id="sys1" value=head.one_or)
 		input(type="text" id="sys2" value=head.two_or)
@@ -149,3 +154,4 @@ block system
 		input(type="text" id="sys21" value=button.volime)
 		input(type="text" id="sys22" value=button.flow)
 		input(type="text" id="sys23" value=main.comments)
+		input(type="text" id="sys24" value=top_panel.height)

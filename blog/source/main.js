@@ -41,6 +41,7 @@ $(document).ready(function() {
 	$('#vol' + $('#sys21').val()).click();
 	$('#flo' + $('#sys22').val()).click();
 	$('#com' + $('#sys23').val()).click();
+	$('#he' + $('#sys24').val()).click();
 
 	//Удаление второго цвета
 	$('input[name="rib_sort"]').change(function(){
