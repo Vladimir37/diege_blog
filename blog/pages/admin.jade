@@ -6,7 +6,7 @@ block system
 			article.edit_block
 				h3 Главный заголовок
 				input(type="text" name="main_tit" value=head.one class="titles")
-				article#edit_ui_mt
+				article.perm
 					input(type="radio" name="m_tit_pos" value="1" id="mtp1")
 					label(for="mtp1") Слева
 					input(type="radio" name="m_tit_pos" value="2" id="mtp2")
@@ -14,11 +14,11 @@ block system
 					input(type="radio" name="m_tit_pos" value="3" id="mtp3")
 					label(for="mtp3") Справа
 				h4 Цвет
-				input(type="text" id="m_tit_color" name="m_tit_color" value="rgb(0, 0, 0)")
+				input(type="text" id="m_tit_color" name="m_tit_color" value=head.one_col)
 			article.edit_block
 				h3 Вторичный заголовок
 				input(type="text" name="sec_tit" value=head.two class="titles")
-				article#edit_ui_st
+				article.perm
 					input(type="radio" name="s_tit_pos" value="1" id="stp1")
 					label(for="stp1") Слева
 					input(type="radio" name="s_tit_pos" value="2" id="stp2")
@@ -26,11 +26,11 @@ block system
 					input(type="radio" name="s_tit_pos" value="3" id="stp3")
 					label(for="stp3") Справа
 				h4 Цвет
-				input(type="text" id="s_tit_color" name="s_tit_color" value="rgb(0, 0, 0)")
+				input(type="text" id="s_tit_color" name="s_tit_color" value=head.two_col)
 			br
 			article.edit_block
 				h3 Управление лентой
-				article#sort_rib
+				article.perm
 					input(type="radio" name="rib_sort" value="1" id="rs1")
 					label(for="rs1") Однотонная
 					input(type="radio" name="rib_sort" value="2" id="rs2")
@@ -45,14 +45,14 @@ block system
 			br
 			article.edit_block#pan_adm
 				h3 Управление панелью
-				article#pan_main_radio
+				article.perm
 					input(type="radio" name="pan_main" value="1" id="mp1")
 					label(for="mp1") Включить
 					input(type="radio" name="pan_main" value="2" id="mp2")
 					label(for="mp2") Отключить
 				article.edit_block#pan_cont
 					h4Положение панели
-					article#pan_posit
+					article.perm
 						input(type="radio" name="pan_pos" value="1" id="pp1")
 						label(for="pp1") Слева
 						input(type="radio" name="pan_pos" value="2" id="pp2")
@@ -120,7 +120,11 @@ block system
 						label(for="flo1") Включить
 						input(type="radio" name="flo" value="2" id="flo2")
 						label(for="flo2") Отключить
-		input(type="submit" value="Отправить")
+			br
+			article.edit_block
+				input(type="submit" value="Сохранить")
+				input(type="button" id="open_reset")
+				
 	section.data_system
 		input(type="text" id="sys1" value=head.one_or)
 		input(type="text" id="sys2" value=head.two_or)

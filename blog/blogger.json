@@ -22,8 +22,8 @@
 		"enabled": 1,
 		"position": 1,
 		"color": "rgb(0, 0, 0)",
-		"back_title": "yellow",
-		"back_main": "brown",
+		"back_title": "rgb(102, 102, 255)",
+		"back_main": "rgb(51, 51, 204)",
 		"news": 2,
 		"brenchs": 2,
 		"archives": 2
@@ -31,16 +31,16 @@
 	"content": {
 		"background": "1.png",
 		"back_color": "rgb(255, 255, 255)",
-		"font_color": "black",
-		"title_color": "black",
+		"font_color": "rgb(0, 0, 0)",
+		"title_color": "rgb(0, 51, 102)",
 		"opacity": 0.8
 	},
 	"main": {
 		"comments": 1
 	},
 	"button": {
-		"background": "yellow",
-		"color": "black",
+		"background": "rgb(0, 188, 255)",
+		"color": "rgb(0, 0, 0)",
 		"volime": 1,
 		"flow": 1
 	}

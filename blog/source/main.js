@@ -19,27 +19,14 @@ $(document).ready(function() {
 	};
 
 	//Кнопки выбора
-	$('#edit_ui_mt').buttonset();
-	$('#edit_ui_st').buttonset();
-	$('#sort_rib').buttonset();
-	$('#pan_main_radio').buttonset();
-	$('#pan_posit').buttonset();
 	$('.perm').buttonset();
 
 	//Выбор цвета
-	$("#m_tit_color").spectrum(new fabrColor($('#sys3').val()));
-	$("#s_tit_color").spectrum(new fabrColor($('#sys4').val()));
-	$("#rib_font").spectrum(new fabrColor($('#sys5').val()));
-	$("#rib_color_f").spectrum(new fabrColor($('#sys7').val()));
-	$("#rib_color_s").spectrum(new fabrColor($('#sys8').val()));
-	$("#panel_color").spectrum(new fabrColor($('#sys11').val()));
-	$("#panel_color_tit").spectrum(new fabrColor($('#sys12').val()));
-	$("#panel_color_li").spectrum(new fabrColor($('#sys13').val()));
-	$("#back_cont").spectrum(new fabrColor($('#sys17').val()));
-	$("#color_main_tit").spectrum(new fabrColor($('#sys20').val()));
-	$("#color_main_te").spectrum(new fabrColor($('#sys19').val()));
-	$("#but_col").spectrum(new fabrColor($('#but_col').val()));
-	$("#but_back").spectrum(new fabrColor($('#but_back').val()));
+	var select_color = ['m_tit_color', 's_tit_color', 'rib_font', 'rib_color_f', 'rib_color_s', 'panel_color', 'panel_color_tit', 'panel_color_li', 'back_cont', 'color_main_tit', 'color_main_te', 'but_col', 'but_back'];
+
+	select_color.forEach(function(item) {
+		$('#' + item).spectrum(new fabrColor($('#'+item).val()));
+	});
 
 	//Выделение пунктов по системным данным из фрейма
 	$('#mtp' + $('#sys1').val()).click();

@@ -18,6 +18,19 @@ app.post('/res', function(req, res) {
 	console.log(req.body);
 	res.end();
 });
+app.get('/backgound', function(req, res) {
+	res.end();
+})
+app.get('/image', function(req, res) {
+	fs.readdir('blog/source/back-blog', function(err, resp) {
+		if(err) {
+			console.log(err);
+		}
+		else {
+			console.log(resp);
+		}
+	})
+});
 app.get('*', function(req, res) {
 	router.parse(req, res);
 	console.log(req.url);
