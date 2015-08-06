@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 	//Кнопки выбора
 	$('.perm').buttonset();
-
+	$('.sub_but').button();
 	//Выбор цвета
 	var select_color = ['m_tit_color', 's_tit_color', 'rib_font', 'rib_color_f', 'rib_color_s', 'panel_color', 'panel_color_tit', 'panel_color_li', 'back_cont', 'color_main_tit', 'color_main_te', 'but_col', 'but_back'];
 
@@ -42,6 +42,8 @@ $(document).ready(function() {
 	$('#flo' + $('#sys22').val()).click();
 	$('#com' + $('#sys23').val()).click();
 	$('#he' + $('#sys24').val()).click();
+	$('input[id="' + $('#sys30').val() + '"]').click();
+	$('#back_type' + $('#sys31').val()).click();
 
 	//Удаление второго цвета
 	$('input[name="rib_sort"]').change(function(){

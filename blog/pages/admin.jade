@@ -101,6 +101,11 @@ block system
 				input(type="text" name="color_main_te" id="color_main_te" value=content.title_color)
 			br
 			article.edit_block
+				h3 Общий фон
+				a(href="background")
+					input(type="button" value="Редактировать" class="sub_but")
+			br
+			article.edit_block
 				h3 Комментирование ваших записей
 				article.perm
 					input(type="radio" name="com" value="1" id="com1")
@@ -128,7 +133,7 @@ block system
 						label(for="flo2") Отключить
 			br
 			article.edit_block
-				input(type="submit" value="Сохранить")
+				input(type="submit" value="Сохранить" class="sub_but")
 
 	section.data_system
 		input(type="text" id="sys1" value=head.one_or)

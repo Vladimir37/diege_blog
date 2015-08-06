@@ -51,4 +51,29 @@ function editing(changed) {
 	});
 }
 
+function editingBack(changed) {
+	fs.readFile('blog/blogger.json', function(err, data) {
+		frame = JSON.parse(data);
+		frame.content.background = changed.pic;
+		frame.content.back_type = changed.back_type;
+		var result = JSON.stringify(frame);
+		fs.open('blog/blogger.json', 'w', function(err, desc) {
+			if(err) {
+				console.log(err);
+			}
+			else {
+				fs.write(desc, result, function(err) {
+					if(err) {
+						console.log(err);
+					}
+					else {
+						console.log('Win!');
+					}
+				});
+			}
+		});
+	});
+};
+
 exports.editing = editing;
+exports.editingBack = editingBack;

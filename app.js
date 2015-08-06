@@ -19,6 +19,10 @@ app.post('/res', function(req, res) {
 	control.editing(req.body); 
 	res.end();
 });
+app.post('/edit_pic', function(req, res) {
+	control.editingBack(req.body); 
+	res.end();
+});
 app.get('/background', function(req, res) {
 	fs.readdir('blog/source/back-blog/', function(err, files) {
 		render.jade(res, 'background', files);
@@ -36,7 +40,6 @@ app.get('/image', function(req, res) {
 });
 app.get('*', function(req, res) {
 	router.parse(req, res);
-	//console.log(req.url);
 });
 
 http.createServer(app).listen(3000);
