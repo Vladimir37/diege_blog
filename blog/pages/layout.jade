@@ -15,14 +15,14 @@ html(lang="ru")
 		link(rel="stylesheet", href="source/spectrum.css")
 		mixin post(name, text, date, comments, link, branch)
 			section.post
-				h3=name
+				h3.post_tit=name
 				article.info
 					article.date.in=date
 					article.branch.in
 						a(href=branch)=branch
 					article.comments.in 
 						a(href=link) #{comments} комментариев
-				article.data
+				article.data_post
 					p=text
 				a(href=link)
 					article.but_read Читать

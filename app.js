@@ -19,6 +19,9 @@ app.post('/res', function(req, res) {
 	control.editing(req.body); 
 	res.end();
 });
+app.get('/settings', function(req, res) {
+	render.setting(res);
+});
 app.post('/edit_pic', function(req, res) {
 	control.editingBack(req.body); 
 	res.end();
