@@ -13,6 +13,7 @@ html(lang="ru")
 		link(rel="stylesheet", href="source/style/jquery-ui.structure.min.css")
 		link(rel="stylesheet", href="source/style/jquery-ui.theme.min.css")
 		link(rel="stylesheet", href="source/spectrum.css")
+		link(rel="stylesheet", type="text/css", href="settings")
 		mixin post(name, text, date, comments, link, branch)
 			section.post
 				h3.post_tit=name
@@ -30,6 +31,7 @@ html(lang="ru")
 	body
 		section.back
 		section.wrapper
+			section.main_field
 			h1=head.one
 			h2=head.two
 			article.ribbon

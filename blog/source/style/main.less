@@ -1,5 +1,14 @@
 body {
 	margin: 0;
+	.main_field {
+		//background: red;
+		position: absolute;
+		width: 980px;
+		height: 100%;
+		//opacity: 0.8;
+		z-index: -1;
+		left: 0;
+	}
 	.back {
 		position: fixed;
 		width: 100%;
@@ -7,9 +16,11 @@ body {
 	}
 	.wrapper {
 		width: 960px;
-		margin: 10px auto;
-		border: 1px solid red;
+		position: relative;
+		margin: 0 auto;
 		padding: 10px;
+		padding-top: 20px;
+		background: rgba(255, 255, 255, 0);
 		h1 {
 			font-size: 40px;
 			margin: 15px;
@@ -19,8 +30,6 @@ body {
 		}
 		.ribbon {
 			width: 100%;
-			height: 100px;
-			background: green;
 		}
 			.content {
 				width: 615px;

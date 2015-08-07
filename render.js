@@ -60,7 +60,8 @@ function setting(res) {
 			else {
 				res.write('background-repeat: repeat; }\n');
 			}
-			res.write('.wrapper {background: ' + frame.content.back_color + '}');
+			res.write('.main_field {background: ' + frame.content.back_color + ';');
+			res.write('opacity: ' + frame.content.opacity + ';}');
 			res.end();
 		}
 	});
@@ -69,13 +70,13 @@ function setting(res) {
 //Расшифровка значений
 function align(num) {
 	switch(num) {
-		case 1:
+		case '1':
 			return 'left'
 			break;
-		case 2:
+		case '2':
 			return 'center'
 			break;
-		case 3:
+		case '3':
 			return 'right'
 			break;
 		default:
