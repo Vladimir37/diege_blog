@@ -1,0 +1,34 @@
+//- Пост для любого
+mixin post(name, text, date, comments, link, branch)
+			section.post
+				h3.post_tit=name
+				article.info
+					article.date.in=date
+					article.branch.in
+						a(href=branch)=branch
+					article.comments.in 
+						a(href=link) #{comments} комментариев
+				article.data_post
+					p=text
+				a(href=link)
+					article.but_read Читать
+					article.clearfix
+//- Пост для админа
+mixin post_adm(name, text, date, comments, link, branch)
+			section.post
+				h3.post_tit=name
+				article.info
+					article.date.in=date
+					article.branch.in
+						a(href=branch)=branch
+					article.comments.in 
+						a(href=link) #{comments} комментариев
+				article.data_post
+					p=text
+				article.edit_post
+					a(href=date) Удалить
+					br
+					a(href=date) Редактировать
+				a(href=link)
+					article.but_read Читать
+					article.clearfix

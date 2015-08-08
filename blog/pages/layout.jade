@@ -14,20 +14,7 @@ html(lang="ru")
 		link(rel="stylesheet", href="source/style/jquery-ui.theme.min.css")
 		link(rel="stylesheet", href="source/spectrum.css")
 		link(rel="stylesheet", type="text/css", href="settings")
-		mixin post(name, text, date, comments, link, branch)
-			section.post
-				h3.post_tit=name
-				article.info
-					article.date.in=date
-					article.branch.in
-						a(href=branch)=branch
-					article.comments.in 
-						a(href=link) #{comments} комментариев
-				article.data_post
-					p=text
-				a(href=link)
-					article.but_read Читать
-					article.clearfix
+		include mixins
 	body
 		section.back
 		section.wrapper
