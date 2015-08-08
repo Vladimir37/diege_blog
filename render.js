@@ -62,6 +62,20 @@ function setting(res) {
 			}
 			res.write('.main_field {background: ' + frame.content.back_color + ';');
 			res.write('opacity: ' + frame.content.opacity + ';}');
+			res.write('.but_read { background: ' + frame.button.background + '; color: ' + frame.button.color + '; ');
+			if(frame.button.volime == 1) {
+				res.write('box-shadow: inset -6px -6px 5px 2px black; box-shadow: inset 6px 6px 5px 2px white; ');
+			}
+			if(frame.button.flow == 1) {
+				res.write('border-radius: 15px;');
+			}
+			res.write('}\n')
+			if(frame.main_panel.position == 1) {
+				res.write('.content {float: right;} .panel {float: left;}');
+			}
+			else {
+				res.write('.content {float: left;} .panel {float: right;}');
+			}
 			res.end();
 		}
 	});

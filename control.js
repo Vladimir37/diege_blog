@@ -1,7 +1,8 @@
 var fs = require('fs');
+var formidable = require('formidable');
 
 //Обработка изменений в настройках
-function editing(changed) {
+function editing(changed, res) {
 	fs.readFile('blog/blogger.json', function(err, data) {
 		frame = JSON.parse(data);
 		frame.head.one = changed.main_tit;
@@ -44,6 +45,7 @@ function editing(changed) {
 					}
 					else {
 						console.log('Win!');
+						res.redirect('/');
 					}
 				})
 			}
@@ -51,7 +53,7 @@ function editing(changed) {
 	});
 }
 
-function editingBack(changed) {
+function editingBack(changed, res) {
 	fs.readFile('blog/blogger.json', function(err, data) {
 		frame = JSON.parse(data);
 		frame.content.background = changed.pic;
@@ -68,6 +70,7 @@ function editingBack(changed) {
 					}
 					else {
 						console.log('Win!');
+						res.redirect('/');
 					}
 				});
 			}
@@ -75,5 +78,37 @@ function editingBack(changed) {
 	});
 };
 
+function createBack(req, res) {
+	fs.readFile('blog/blogger.json', function(err, data) {
+		frame = JSON.parse(data);
+		frame.main.max_back++;
+		var form = new formidable.IncomingForm();
+		form.uploadDir = 'blog/temp/';
+		form.parse(req, function(errors, fields, files) {
+			console.log(files.back);
+			fs.rename(files.back.path, 'blog/source/back-blog/' + frame.main.max_back, function() {
+				var result = JSON.stringify(frame);
+				fs.open('blog/blogger.json', 'w', function(err, desc) {
+					if(err) {
+						console.log(err);
+					}
+					else {
+						fs.write(desc, result, function(err) {
+							if(err) {
+								console.log(err);
+							}
+							else {
+								console.log('Win!');
+								res.redirect('/background');
+							}
+						});
+					}
+				});
+			});
+		});
+	});
+};
+
 exports.editing = editing;
 exports.editingBack = editingBack;
+exports.createBack = createBack;

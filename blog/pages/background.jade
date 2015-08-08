@@ -15,9 +15,9 @@ block content
 				label(for="back_type2") Замостить
 			input(type="submit" class="sub_but" value="Сохранить")
 		br
-		form(action="/new_back" method="post")
+		form(action="/new_back" method="post" enctype="multipart/form-data")
 			h3 Новый фон
-			input(type="file" name="back")
+			input(type="file" name="back" accept="image/jpeg")
 			br
 			input(type="submit" class="sub_but" value="Загрузить")
 	section.data_system

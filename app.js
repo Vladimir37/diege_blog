@@ -16,15 +16,16 @@ app.get('/admin', function(req, res) {
 	render.jade(res, 'admin');
 });
 app.post('/res', function(req, res) {
-	control.editing(req.body); 
-	res.end();
+	control.editing(req.body, res); 
 });
 app.get('/settings', function(req, res) {
 	render.setting(res);
 });
 app.post('/edit_pic', function(req, res) {
-	control.editingBack(req.body); 
-	res.end();
+	control.editingBack(req.body, res); 
+});
+app.post('/new_back', function(req, res) {
+	control.createBack(req, res);
 });
 app.get('/background', function(req, res) {
 	fs.readdir('blog/source/back-blog/', function(err, files) {
