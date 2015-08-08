@@ -25,8 +25,8 @@ function editing(changed, res) {
 		frame.main_panel.brenchs = changed.bench;
 		frame.main_panel.archives = changed.arc;
 		frame.content.back_color = changed.back_cont;
-		frame.content.font_color = changed.color_main_tit;
-		frame.content.title_color = changed.color_main_te;
+		frame.content.font_color = changed.color_main_te;
+		frame.content.title_color = changed.color_main_tit;
 		frame.content.opacity = changed.opacity;
 		frame.main.comments = changed.com;
 		frame.button.background = changed.but_back;

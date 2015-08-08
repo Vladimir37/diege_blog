@@ -49,8 +49,8 @@ function setting(res) {
 			res.write('h2 {text-align: ' + align(frame.head.two_or) + '; color: ' + frame.head.two_col + ';}\n');
 			res.write('.ribbon {background: ' + ribbon_color(frame.top_panel.back_type, frame.top_panel.back_color_f, frame.top_panel.back_color_s) + '; color: ' + frame.top_panel.color + '; height: ' + frame.top_panel.height * 50 + 'px;}\n');
 			res.write('.panel {color: ' + frame.main_panel.color + '}\n');
-			res.write('.pan_title {background: ' + frame.main_panel.back_title + '};\n');
-			res.write('.pan_list {background: ' + frame.main_panel.back_main + '};\n');
+			res.write('.pan_title {background: ' + frame.main_panel.back_title + '}\n');
+			res.write('.pan_list {background: ' + frame.main_panel.back_main + '}\n');
 			res.write('.post_tit {color: ' + frame.content.title_color + '}\n');
 			res.write('.data_post {color: ' + frame.content.font_color + '}\n');
 			res.write('.back { background-image: url("/source/back-blog/' + frame.content.background + '"); ');

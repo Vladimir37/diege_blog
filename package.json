@@ -4,6 +4,9 @@
   	"express": "*",
     "jade": "*",
     "body-parser": "*",
-    "formidable": "*"
+    "formidable": "*",
+    "cookie-parser": "*",
+    "redis": "*",
+    "random-token": "*"
   }
 }

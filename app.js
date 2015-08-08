@@ -32,16 +32,6 @@ app.get('/background', function(req, res) {
 		render.jade(res, 'background', files);
 	});
 });
-app.get('/image', function(req, res) {
-	fs.readdir('blog/source/back-blog', function(err, resp) {
-		if(err) {
-			console.log(err);
-		}
-		else {
-			console.log(resp);
-		}
-	})
-});
 app.get('*', function(req, res) {
 	router.parse(req, res);
 });
