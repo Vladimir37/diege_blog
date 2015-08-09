@@ -36,4 +36,13 @@ app.get('*', function(req, res) {
 	router.parse(req, res);
 });
 
-http.createServer(app).listen(3000);
+var specific;
+fs.readFile('blog/specification.json', function(err, resp) {
+	if(err) {
+		console.log(err);
+	}
+	else {
+		specific = JSON.parse(resp);
+		http.createServer(app).listen(specific.port);
+	}
+})
