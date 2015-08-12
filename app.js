@@ -19,7 +19,7 @@ app.get('/posting', function(req, res) {
 	render.jade(res, 'posting')
 });
 app.post('/posting', function(req, res) {
-	//
+	control.add_post(req, res);
 });
 app.post('/res', function(req, res) {
 	control.editing(req.body, res); 

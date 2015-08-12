@@ -1,5 +1,6 @@
 var fs = require('fs');
 var formidable = require('formidable');
+var time = require('./time');
 
 //Обработка изменений в настройках
 function editing(changed, res) {
@@ -111,7 +112,40 @@ function createBack(req, res) {
 
 //Создание нового поста
 function add_post(req, res) {
-	//
+	var form = new formidable.IncomingForm();
+	form.uploadDir = 'blog/temp/';
+	form.parse(req, function(errors, fields, files) {
+		for(k in files) {
+			if(files[k].type.slice(0, 6) == 'image/') {
+				console.log(files[k].name + ' HURRAY!')
+			}
+		};
+		if(fields.rubric == '' || fields.rubric == ' ' || fields.rubric == '  ' || fields.rubric == '	') {
+			var rubric = 'Без рубрики';
+		}
+		else {
+			var rubric = safetyText(fields.rubric);
+		}
+		var title = safetyText(fields.title);
+		var content = safetyText(fields.content);
+		console.log(title);
+		console.log(rubric);
+		console.log(content);
+		res.end();
+	});
+};
+
+//Безопастность текста
+function safetyText(text) {
+	var res = text.replace('\'', '&apos;');
+	res = res.replace('\"', '&quot;');
+	res = res.replace('<', '&lt;');
+	res = res.replace('>', '&gt;');
+	res = res.replace('&', '&amp;');
+	res = res.replace('(', '&#040;');
+	res = res.replace(')', '&#041;');
+	res = res.replace(';', '&#59;');
+	return res;
 };
 
 exports.editing = editing;

@@ -94,6 +94,6 @@ $(document).ready(function() {
 	};
 	//Отправка поста при клике
 	$('.posting .sub_post').click(function() {
-		$('form').submit();
+		$('#sub_post_but').click();
 	})
 });
