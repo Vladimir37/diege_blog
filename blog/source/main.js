@@ -88,12 +88,18 @@ $(document).ready(function() {
 		}
 	});
 	//Очистка поста при обновлении страницы
-	$('.posting textarea').val('');
+	$('.posting #content_post').val(null);
 	for(var i = 1; i < 3; i++) {
 		$('.posting input[name="img' + i + '"]').val('');
 	};
 	//Отправка поста при клике
 	$('.posting .sub_post').click(function() {
+		$('#content_post').attr('required', true);
 		$('#sub_post_but').click();
-	})
+	});
+	//При загрузке неверного фона
+	var ref = window.location.search.slice(1);
+	if(ref == 'unback') {
+		$('.wrong_file').show();
+	}
 });

@@ -1,6 +1,29 @@
 var fs = require('fs');
 var formidable = require('formidable');
+var mysql = require('mysql');
 var time = require('./time');
+
+//Имя и порт
+var specific;
+fs.readFile('blog/specification.json', function(err, resp) {
+	if(err) {
+		console.log(err);
+	}
+	else {
+		specific = JSON.parse(resp);
+	}
+});
+
+//Подключение к базе
+var db_connect;
+fs.readFile('blog/db.json', function(err, resp) {
+	if(err) {
+		console.log(err);
+	}
+	else {
+		db_connect = mysql.createConnection(JSON.parse(resp));
+	}
+});
 
 //Обработка изменений в настройках
 function editing(changed, res) {
@@ -87,25 +110,30 @@ function createBack(req, res) {
 		form.uploadDir = 'blog/temp/';
 		form.parse(req, function(errors, fields, files) {
 			console.log(files.back);
-			fs.rename(files.back.path, 'blog/source/back-blog/' + frame.main.max_back, function() {
-				var result = JSON.stringify(frame);
-				fs.open('blog/blogger.json', 'w', function(err, desc) {
-					if(err) {
-						console.log(err);
-					}
-					else {
-						fs.write(desc, result, function(err) {
-							if(err) {
-								console.log(err);
-							}
-							else {
-								console.log('Win!');
-								res.redirect('/background');
-							}
-						});
-					}
+			if(files.back.type.slice(0,6) == 'image/'){
+				fs.rename(files.back.path, 'blog/source/back-blog/' + frame.main.max_back, function() {
+					var result = JSON.stringify(frame);
+					fs.open('blog/blogger.json', 'w', function(err, desc) {
+						if(err) {
+							console.log(err);
+						}
+						else {
+							fs.write(desc, result, function(err) {
+								if(err) {
+									console.log(err);
+								}
+								else {
+									console.log('Win!');
+									res.redirect('/background');
+								}
+							});
+						}
+					});
 				});
-			});
+			}
+			else {
+				res.redirect('/background?unback');
+			}
 		});
 	});
 };
@@ -114,10 +142,16 @@ function createBack(req, res) {
 function add_post(req, res) {
 	var form = new formidable.IncomingForm();
 	form.uploadDir = 'blog/temp/';
+	var img_num = 0;
 	form.parse(req, function(errors, fields, files) {
+		var normal_imgs_path = [];
+		var normal_imgs_name = [];
 		for(k in files) {
 			if(files[k].type.slice(0, 6) == 'image/') {
-				console.log(files[k].name + ' HURRAY!')
+				//console.log(files[k].name + ' HURRAY!');
+				normal_imgs_path.push(files[k].path);
+				normal_imgs_name.push(files[k].name);
+				img_num++;
 			}
 		};
 		if(fields.rubric == '' || fields.rubric == ' ' || fields.rubric == '  ' || fields.rubric == '	') {
@@ -128,23 +162,85 @@ function add_post(req, res) {
 		}
 		var title = safetyText(fields.title);
 		var content = safetyText(fields.content);
-		console.log(title);
-		console.log(rubric);
-		console.log(content);
-		res.end();
+		var curTime = time.current();
+		//Если есть изображения к посту
+		if(img_num != 0) {
+			db_connect.connect(function() {
+				db_connect.query('SELECT * FROM ' + specific.name + '_post ORDER BY `id` DESC LIMIT 1', function(err, rows) {
+					if(err) {
+						console.log(err);
+					}
+					else {
+						//Самый первый пост
+						if(rows == '') {
+							fs.mkdir('blog/source/images/1', function(err) {
+								if(err) {
+									console.log(err);
+								}
+								else {
+									for(var i = 0; i < normal_imgs_name.length; i++) {
+										fs.rename(normal_imgs_path[i], 'blog/source/images/1/' + normal_imgs_name[i]);
+									}
+									db_connect.query('INSERT INTO `test_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '")', function(err) {
+										if(err) {
+											console.log(err);
+										}
+										else {
+											res.end('Win!')
+										}
+									});
+								}
+							});
+						}
+						else {
+							//Не первый пост
+							var id_post = ++rows[0].id;
+							fs.mkdir('blog/source/images/' + id_post, function(err) {
+								if(err) {
+									console.log(err);
+								}
+								else {
+									for(var i = 0; i < normal_imgs_name.length; i++) {
+										fs.rename(normal_imgs_path[i], 'blog/source/images/' + id_post + '/' + normal_imgs_name[i]);
+									}
+									db_connect.query('INSERT INTO `test_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '")', function(err) {
+										if(err) {
+											console.log(err);
+										}
+										else {
+											res.end('Win!')
+										}
+									});
+								}
+							});
+						}
+					}
+				})
+			});
+		}
+		//Если пост без изображений
+		else {
+			db_connect.query('INSERT INTO `test_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", ' + null + ', "' + rubric + '")', function(err) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					res.end('Win!');
+				}
+			});
+		}
 	});
 };
 
 //Безопастность текста
 function safetyText(text) {
-	var res = text.replace('\'', '&apos;');
-	res = res.replace('\"', '&quot;');
-	res = res.replace('<', '&lt;');
-	res = res.replace('>', '&gt;');
-	res = res.replace('&', '&amp;');
-	res = res.replace('(', '&#040;');
-	res = res.replace(')', '&#041;');
-	res = res.replace(';', '&#59;');
+	var res = text.replace(/;/g, '&#59;');
+	res = res.replace(/\'/g, '&apos;');
+	res = res.replace(/\"/g, '&quot;');
+	res = res.replace(/\</g, '&lt;');
+	res = res.replace(/\>/g, '&gt;');
+	res = res.replace(/\(/g, '&#040;');
+	res = res.replace(/\)/g, '&#041;');
 	return res;
 };
 
