@@ -109,6 +109,12 @@ function createBack(req, res) {
 	});
 };
 
+//Создание нового поста
+function add_post(req, res) {
+	//
+};
+
 exports.editing = editing;
 exports.editingBack = editingBack;
 exports.createBack = createBack;
+exports.add_post = add_post;

@@ -76,5 +76,24 @@ $(document).ready(function() {
 		slide: function( event, ui ) {
 			$("#opacity").val(ui.value/10);
 		}
+	});
+	//Постинг картинок
+	var j = 1;
+	$('.posting input[type="file"]').change(function(qwe) {
+		if(!$(this).data('changed')) {
+			$('#content_post').val($('#content_post').val() + '[ЗагруженноеИзображение' + j + ']');
+			j++;
+			$('input[type="file"][name="img' + j + '"]').slideDown();
+			$(this).attr('data-changed', true);
+		}
+	});
+	//Очистка поста при обновлении страницы
+	$('.posting textarea').val('');
+	for(var i = 1; i < 3; i++) {
+		$('.posting input[name="img' + i + '"]').val('');
+	};
+	//Отправка поста при клике
+	$('.posting .sub_post').click(function() {
+		$('form').submit();
 	})
 });

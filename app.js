@@ -15,6 +15,12 @@ app.get('/', function(req, res) {
 app.get('/admin', function(req, res) {
 	render.jade(res, 'admin');
 });
+app.get('/posting', function(req, res) {
+	render.jade(res, 'posting')
+});
+app.post('/posting', function(req, res) {
+	//
+});
 app.post('/res', function(req, res) {
 	control.editing(req.body, res); 
 });
