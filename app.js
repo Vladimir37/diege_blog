@@ -4,13 +4,25 @@ var router = require('./router');
 var render = require('./render');
 var parser = require('body-parser');
 var fs = require('fs');
+
 var control = require('./control');
+var time = require('./time');
 
 var app = express();
 app.use(parser());
 
 app.get('/', function(req, res) {
 	render.jade(res, 'index');
+});
+app.get('/post/:name', function(req, res) {
+	var re_num = new RegExp(/[0-9]/);
+	var name = req.params.name;
+	if(re_num.test(name)) {
+		render.post(res, name);
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.get('/admin', function(req, res) {
 	render.jade(res, 'admin');
@@ -42,6 +54,7 @@ app.get('*', function(req, res) {
 	router.parse(req, res);
 });
 
+//Чтение спецификации
 var specific;
 fs.readFile('blog/specification.json', function(err, resp) {
 	if(err) {
@@ -51,4 +64,4 @@ fs.readFile('blog/specification.json', function(err, resp) {
 		specific = JSON.parse(resp);
 		http.createServer(app).listen(specific.port);
 	}
-})
+});

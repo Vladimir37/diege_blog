@@ -1,11 +1,9 @@
 body {
 	margin: 0;
 	.main_field {
-		//background: red;
 		position: absolute;
 		width: 980px;
 		height: 100%;
-		//opacity: 0.8;
 		z-index: -1;
 		left: 0;
 	}
@@ -32,7 +30,12 @@ body {
 			width: 100%;
 		}
 			.content {
-				width: 615px;
+				.post_main {
+					white-space: pre-wrap;
+					img {
+						max-width: 100%;
+					}
+				}
 				.post {
 					margin-bottom: 20px;
 					border-bottom: 1px solid black;
@@ -54,15 +57,12 @@ body {
 				}
 			}
 			.panel {
-				width: 300px;
-				background: lighten(blue, 10%);
 				.pan {
 					width: 100%;
 					border: 1px solid red;
 					article {
 						padding: 4px;
 						border-bottom: 1px solid black;
-						color: white;
 						box-sizing: border-box;
 					}
 					.pan_title {

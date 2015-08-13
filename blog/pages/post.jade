@@ -1,0 +1,9 @@
+extends layout
+
+block content
+	section.post_main
+		h3=added.name
+		article.time_post #{extra[0]}-#{extra[1]}-#{extra[2]} #{extra[3]}:#{extra[4]}
+		a(href="/rubric/" + added.rubric)
+			article.rubric_post=added.rubric
+		article.content_post!=added.text
