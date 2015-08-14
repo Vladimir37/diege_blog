@@ -26,7 +26,7 @@ fs.readFile('blog/specification.json', function(err, resp) {
 });
 
 //Рендеринг jade
-function renderJade(res, name, addon, extra) {
+function renderJade(res, name, addon, extra, extra2) {
 	fs.readFile('blog/blogger.json', function(err, data) {
 	if(err) {
 		console.log(err);
@@ -35,6 +35,7 @@ function renderJade(res, name, addon, extra) {
 		frame = JSON.parse(data);
 		frame.added = addon;
 		frame.extra = extra;
+		frame.extra2 = extra2;
 		jade.renderFile('blog/pages/' + name + '.jade', frame, function(error, resp) {
 			if(err) {
 				console.log(error);
@@ -164,7 +165,19 @@ function renderPost(res, num) {
 					var i_cur = i + 1;
 					rows[0].text = rows[0].text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + num + '/' + img_arr[i] + '" alt="img">');
 				}
-				renderJade(res, 'post', rows[0], time_post);
+				var comments;
+				if(rows[0].comment != 0) {
+					db_connect.query('SELECT * FROM ' + specific.name + '_comment WHERE `article` = ' + num, function(err, rows_com) {
+						rows_com.forEach(function(item) {
+							item.date = time.conversion_arr(item.date);
+						});
+						renderJade(res, 'post', rows[0], time_post, rows_com);
+						console.log(rows_com);
+					});
+				}
+				else {
+					renderJade(res, 'post', rows[0], time_post);
+				}
 			}
 		});
 	});

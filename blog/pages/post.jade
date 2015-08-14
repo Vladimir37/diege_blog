@@ -5,5 +5,18 @@ block content
 		h3=added.name
 		article.time_post #{extra[0]}-#{extra[1]}-#{extra[2]} #{extra[3]}:#{extra[4]}
 		a(href="/rubric/" + added.rubric)
-			article.rubric_post=added.rubric
+			article.rubric_post Рубрика: #{added.rubric}
 		article.content_post!=added.text
+	section.comment
+		- if(main.comments == 1)
+			article.send_comment
+				form(action="" method="post")
+					input(type="text" name="name" placeholder="Ваше имя")
+					br
+					textarea(name="comment" placeholder="Ваш комментарий" required)
+					br
+					input(type="submit" value="Отправить").but_read
+		- for(var i = 0; i < extra2.length; i++)
+			//- Поставить проверку на авторство блога!
+			- var posting_date = extra2[i].date[0]+'-'+extra2[i].date[1]+'-'+extra2[i].date[2]+' '+extra2[i].date[3]+':'+extra2[i].date[4];
+			mixin comment(extra2[i].autor_name, posting_date, extra2[i].text)

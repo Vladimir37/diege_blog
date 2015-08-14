@@ -24,6 +24,10 @@ app.get('/post/:name', function(req, res) {
 		res.redirect('/error');
 	}
 });
+app.post('/post/:name', function(req, res) {
+	var name = req.params.name;
+	control.add_comment(req, res, name);
+});
 app.get('/admin', function(req, res) {
 	render.jade(res, 'admin');
 });
@@ -49,6 +53,9 @@ app.get('/background', function(req, res) {
 	fs.readdir('blog/source/back-blog/', function(err, files) {
 		render.jade(res, 'background', files);
 	});
+});
+app.get('/error', function(req, res) {
+	render.jade(res, 'error')
 });
 app.get('*', function(req, res) {
 	router.parse(req, res);

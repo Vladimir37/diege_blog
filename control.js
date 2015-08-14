@@ -181,7 +181,7 @@ function add_post(req, res) {
 									for(var i = 0; i < normal_imgs_name.length; i++) {
 										fs.rename(normal_imgs_path[i], 'blog/source/images/1/' + normal_imgs_name[i]);
 									}
-									db_connect.query('INSERT INTO `test_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '")', function(err) {
+									db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '")', function(err) {
 										if(err) {
 											console.log(err);
 										}
@@ -203,7 +203,7 @@ function add_post(req, res) {
 									for(var i = 0; i < normal_imgs_name.length; i++) {
 										fs.rename(normal_imgs_path[i], 'blog/source/images/' + id_post + '/' + normal_imgs_name[i]);
 									}
-									db_connect.query('INSERT INTO `test_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '")', function(err) {
+									db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '")', function(err) {
 										if(err) {
 											console.log(err);
 										}
@@ -220,7 +220,7 @@ function add_post(req, res) {
 		}
 		//Если пост без изображений
 		else {
-			db_connect.query('INSERT INTO `test_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", ' + null + ', "' + rubric + '")', function(err) {
+			db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", ' + null + ', "' + rubric + '")', function(err) {
 				if(err) {
 					console.log(err);
 				}
@@ -232,9 +232,44 @@ function add_post(req, res) {
 	});
 };
 
+//Добавление комментария
+function add_comment(req, res, num) {
+	var content = safetyText(req.body.comment);
+	var author_type;
+	var author;
+	//Задать автора из куков
+	//ОБЯЗАТЕЛЬНО!
+	if(req.body.name == '' || req.body.name == ' ') {
+		author = 'Аноним';
+		author_type = 0;
+	}
+	else {
+		author = safetyText(req.body.name);
+		author_type = 0;
+	}
+	var curTime = time.current();
+	db_connect.connect(function() {
+		db_connect.query('INSERT INTO `' + specific.name + '_comment` (`article`, `text`, `author_blog`, `autor_name`, `date`) VALUES (' + num + ', "' + content + '", ' + author_type + ', "' + author + '", ' + curTime + ')', function(err) {
+			if(err) {
+				console.log(err);
+			}
+			else {
+				db_connect.query('UPDATE `' + specific.name + '_post` SET `comment`= `comment` + 1 WHERE `id`= ' + num, function(err) {
+					if(err) {
+						console.log(err);
+					}
+					else {
+						res.redirect('/post/' + num);
+					}
+				})
+			}
+		})
+	});
+};
+
 //Безопастность текста
 function safetyText(text) {
-	var res = text.replace(/;/g, '&#59;');
+	var res = text.replace(/\;/g, '&#59;');
 	res = res.replace(/\'/g, '&apos;');
 	res = res.replace(/\"/g, '&quot;');
 	res = res.replace(/\</g, '&lt;');
@@ -248,3 +283,4 @@ exports.editing = editing;
 exports.editingBack = editingBack;
 exports.createBack = createBack;
 exports.add_post = add_post;
+exports.add_comment = add_comment;

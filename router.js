@@ -8,6 +8,9 @@ function parse(req, res) {
 		var resName = result.join('/');
 		render.source(res, resName)
 	}
+	else {
+		res.redirect('/error')
+	}
 };
 function delEmpty(arr) {
 	var new_arr = arr;

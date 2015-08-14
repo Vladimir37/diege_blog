@@ -32,3 +32,10 @@ mixin post_adm(name, text, date, comments, link, branch)
 				a(href=link)
 					article.but_read Читать
 					article.clearfix
+//- Комментарий
+mixin comment(name, date, text)
+	article.comment_post
+		article.comm_head
+			article.comm_name=name
+			article.comm_date=date
+		article.comm_text!=text
