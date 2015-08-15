@@ -85,6 +85,7 @@ $(document).ready(function() {
 			j++;
 			$('input[type="file"][name="img' + j + '"]').slideDown();
 			$(this).attr('data-changed', true);
+			$(this).css('border', '4px solid orange');
 		}
 	});
 	//Очистка поста при обновлении страницы

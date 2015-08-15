@@ -172,49 +172,31 @@ function add_post(req, res) {
 						console.log(err);
 					}
 					else {
-						//Самый первый пост
+						var id_post;
 						if(rows == '') {
-							fs.mkdir('blog/source/images/1', function(err) {
-								if(err) {
-									console.log(err);
-								}
-								else {
-									for(var i = 0; i < normal_imgs_name.length; i++) {
-										fs.rename(normal_imgs_path[i], 'blog/source/images/1/' + normal_imgs_name[i]);
-									}
-									db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`, `pool`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '",' + pool + ')', function(err) {
-										if(err) {
-											console.log(err);
-										}
-										else {
-											res.redirect('/');
-										}
-									});
-								}
-							});
+							id_post = 1;
 						}
 						else {
-							//Не первый пост
-							var id_post = ++rows[0].id;
-							fs.mkdir('blog/source/images/' + id_post, function(err) {
-								if(err) {
-									console.log(err);
-								}
-								else {
-									for(var i = 0; i < normal_imgs_name.length; i++) {
-										fs.rename(normal_imgs_path[i], 'blog/source/images/' + id_post + '/' + normal_imgs_name[i]);
-									}
-									db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`, `pool`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '", ' + pool + ')', function(err) {
-										if(err) {
-											console.log(err);
-										}
-										else {
-											res.redirect('/');
-										}
-									});
-								}
-							});
+							id_post = ++rows[0].id;
 						}
+						fs.mkdir('blog/source/images/' + id_post, function(err) {
+							if(err) {
+								console.log(err);
+							}
+							else {
+								for(var i = 0; i < normal_imgs_name.length; i++) {
+									fs.rename(normal_imgs_path[i], 'blog/source/images/' + id_post + '/' + normal_imgs_name[i]);
+								}
+								db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`, `pool`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '", ' + pool + ')', function(err) {
+									if(err) {
+										console.log(err);
+									}
+									else {
+										res.redirect('/');
+									}
+								});
+							}
+						});
 					}
 				})
 			});

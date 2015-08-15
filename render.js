@@ -171,7 +171,6 @@ function renderPost(res, num) {
 							item.date = time.conversion(item.date);
 						});
 						renderJade(res, 'post', rows[0], time_post, rows_com);
-						console.log(time_post);
 					});
 				}
 				else {
@@ -186,63 +185,66 @@ function renderPost(res, num) {
 function list(res, type, num, obj) {
 	if(type == 1) {
 		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC LIMIT ' + num + ', 10', function(err, rows) {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, rows) {
 				if(err) {
 					console.log(err);
 				}
 				else {
-					rows.forEach(function(item) {
-						if(item.text.length > 512) {
-							item.text = item.text.slice(0, 512) + '...';
-						}
-						item.date = time.conversion(item.date);
-						var img_arr;
-						if(item.imgs) {
-							img_arr = item.imgs.split('|');
-						}
-						else {
-							img_arr = [];
-						}
-						for(var i = 0; i <= img_arr.length; i++) {
-							var i_cur = i + 1;
-							item.text = item.text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + item.id + '/' + img_arr[i] + '" alt="img">');
-						}
-					});
-					renderJade(res, 'index', rows);
+					var cols = Math.ceil(rows.length / 10) - 1;
+					var need_rows = rows.slice(num*10, num*10+10)
+					if(need_rows == '') {
+						res.redirect('/error')
+					}
+					else {
+						handlingList(res, need_rows, cols, num, '/index/');
+					}
 				}
 			})
 		});
 	}
 	else if(type == 2) {
 		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `rubric` = "' + obj + '" AND `pool` = 0 ORDER BY `id` DESC LIMIT ' + num + ', 10', function(err, rows) {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `rubric` = "' + obj + '" AND `pool` = 0 ORDER BY `id` DESC', function(err, rows) {
 				if(err) {
 					console.log(err);
 				}
 				else {
-					rows.forEach(function(item) {
-						if(item.text.length > 512) {
-							item.text = item.text.slice(0, 512) + '...';
-						}
-						item.date = time.conversion(item.date);
-						var img_arr;
-						if(item.imgs) {
-							img_arr = item.imgs.split('|');
-						}
-						else {
-							img_arr = [];
-						}
-						for(var i = 0; i <= img_arr.length; i++) {
-							var i_cur = i + 1;
-							item.text = item.text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + item.id + '/' + img_arr[i] + '" alt="img">');
-						}
-					});
-					renderJade(res, 'index', rows);
+					var cols = Math.ceil(rows.length / 10) - 1;
+					var need_rows = rows.slice(num*10, num*10+10)
+					if(need_rows == '') {
+						res.redirect('/error')
+					}
+					else {
+						handlingList(res, need_rows, cols, num, '/rubric/' + obj + '/');
+					}
 				}
 			})
 		});
 	}
-}
+};
+
+//Обработка и рендер списка постов
+function handlingList(res, rows, cols, num, type) {
+	rows.forEach(function(item) {
+		if(item.text.length > 512) {
+			item.text = item.text.slice(0, 512) + '...';
+		}
+		item.date = time.conversion(item.date);
+		var img_arr;
+		if(item.imgs) {
+			img_arr = item.imgs.split('|');
+		}
+		else {
+			img_arr = [];
+		}
+		for(var i = 0; i <= img_arr.length; i++) {
+			var i_cur = i + 1;
+			item.text = item.text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + item.id + '/' + img_arr[i] + '" alt="img">');
+		}
+	});
+	var pages = [num, cols];
+	renderJade(res, 'index', rows, pages, type);
+};
 
 exports.jade = renderJade;
 exports.source = renderRes;

@@ -11,11 +11,24 @@ var time = require('./time');
 var app = express();
 app.use(parser());
 
+var re_num = new RegExp(/[0-9]/);
+
 app.get('/', function(req, res) {
+	res.redirect('/index');
+});
+app.get('/index', function(req, res) {
 	render.list(res, 1, 0);
 });
+app.get('/index/:name', function(req, res) {
+	var name = req.params.name;
+	if(re_num.test(name)) {
+		render.list(res, 1, name);
+	}
+	else {
+		res.redirect('/error');
+	}
+});
 app.get('/post/:name', function(req, res) {
-	var re_num = new RegExp(/[0-9]/);
 	var name = req.params.name;
 	if(re_num.test(name)) {
 		render.post(res, name);
@@ -31,6 +44,16 @@ app.post('/post/:name', function(req, res) {
 app.get('/rubric/:name', function(req, res) {
 	var name = req.params.name;
 	render.list(res, 2, 0, name);
+});
+app.get('/rubric/:name/:page', function(req, res) {
+	var name = req.params.name;
+	var page = req.params.page;
+	if(re_num.test(page)) {
+		render.list(res, 2, page, name);
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.get('/admin', function(req, res) {
 	render.jade(res, 'admin');
