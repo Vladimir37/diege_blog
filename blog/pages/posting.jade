@@ -15,5 +15,9 @@ block content
 			br
 			input(type="file" name="img3" accept="image/jpeg" data-changed=false size=1).hidden
 			br
-			article.but_read.sub_post Отправить
+			article.but_read.sub_post#post_submit Отправить
+			input(type="radio" name="pool" value="0" checked).hidden
+			input(type="radio" name="pool" value="1")#to_pool_radio.hidden
 			input(type="submit")#sub_post_but
+			br
+			article.but_read.sub_post#save_to_pool Сохранить в пул

@@ -5,14 +5,14 @@ mixin post(name, text, date, comments, link, branch)
 				article.info
 					article.date.in=date
 					article.branch.in
-						a(href=branch)=branch
+						a(href='/rubric/' + branch)=branch
 					article.comments.in 
 						a(href=link) #{comments} комментариев
 				article.data_post
-					p=text
+					p!=text
 				a(href=link)
 					article.but_read Читать
-					article.clearfix
+				article.clearfix
 //- Пост для админа
 mixin post_adm(name, text, date, comments, link, branch)
 			section.post

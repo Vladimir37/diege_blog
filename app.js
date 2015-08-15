@@ -12,7 +12,7 @@ var app = express();
 app.use(parser());
 
 app.get('/', function(req, res) {
-	render.jade(res, 'index');
+	render.list(res, 1, 0);
 });
 app.get('/post/:name', function(req, res) {
 	var re_num = new RegExp(/[0-9]/);
@@ -27,6 +27,10 @@ app.get('/post/:name', function(req, res) {
 app.post('/post/:name', function(req, res) {
 	var name = req.params.name;
 	control.add_comment(req, res, name);
+});
+app.get('/rubric/:name', function(req, res) {
+	var name = req.params.name;
+	render.list(res, 2, 0, name);
 });
 app.get('/admin', function(req, res) {
 	render.jade(res, 'admin');

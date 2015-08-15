@@ -1,14 +1,22 @@
 extends layout
 
 block content	
-	mixin post_adm('Name', ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia nisi cupiditate ipsum sequi quis totam nesciunt pariatur eius ad excepturi! Maxime vero voluptate unde quo, molestiae. Minima voluptate neque ad!', '20.20.20', '0', 'ssylka', 'rubrika')
-	mixin post_adm('Name', ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia nisi cupiditate ipsum sequi quis totam nesciunt pariatur eius ad excepturi! Maxime vero voluptate unde quo, molestiae. Minima voluptate neque ad!', '20.20.20', '0', 'ssylka', 'rubrika')
-	mixin post('Name', ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia nisi cupiditate ipsum sequi quis totam nesciunt pariatur eius ad excepturi! Maxime vero voluptate unde quo, molestiae. Minima voluptate neque ad!', '20.20.20', '0', 'ssylka', 'rubrika')
-	mixin post('Name', ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia nisi cupiditate ipsum sequi quis totam nesciunt pariatur eius ad excepturi! Maxime vero voluptate unde quo, molestiae. Minima voluptate neque ad!', '20.20.20', '0', 'ssylka', 'rubrika')
+	- for(var i = 0; i < added.length; i++)
+		mixin post(added[i].name, added[i].text, added[i].date, added[i].comment, '/post/' + added[i].id, added[i].rubric)
 
-block panel
-	article.pan
-		article.pan_title Главное
-		article.pan_list Первый
-		article.pan_list Второй
-		article.pan_list Третий
+//- block panel
+//- 	article.pan
+//- 		article.pan_title Главное
+//- 		article.pan_list Первый
+//- 		article.pan_list Второй
+//- 		article.pan_list Третий
+//- 	article.pan
+//- 		article.pan_title Главное
+//- 		article.pan_list Первый
+//- 		article.pan_list Второй
+//- 		article.pan_list Третий
+//- 	article.pan
+//- 		article.pan_title Главное
+//- 		article.pan_list Первый
+//- 		article.pan_list Второй
+//- 		article.pan_list Третий

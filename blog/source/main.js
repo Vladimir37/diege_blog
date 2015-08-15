@@ -93,10 +93,19 @@ $(document).ready(function() {
 		$('.posting input[name="img' + i + '"]').val('');
 	};
 	//Отправка поста при клике
-	$('.posting .sub_post').click(function() {
+	$('.posting #post_submit').click(function() {
 		$('#content_post').attr('required', true);
 		$('#sub_post_but').click();
 	});
+
+	//Сохраненение поста в пул
+	$('.posting #save_to_pool').click(function() {
+		$('#content_post').attr('required', true);
+		$('#to_pool_radio').click();
+		$('#sub_post_but').click();
+	});
+
+
 	//При загрузке неверного фона
 	var ref = window.location.search.slice(1);
 	if(ref == 'unback') {

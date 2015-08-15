@@ -3,7 +3,7 @@ extends layout
 block content
 	section.post_main
 		h3=added.name
-		article.time_post #{extra[0]}-#{extra[1]}-#{extra[2]} #{extra[3]}:#{extra[4]}
+		article.time_post=extra
 		a(href="/rubric/" + added.rubric)
 			article.rubric_post Рубрика: #{added.rubric}
 		article.content_post!=added.text
@@ -16,7 +16,7 @@ block content
 					textarea(name="comment" placeholder="Ваш комментарий" required)
 					br
 					input(type="submit" value="Отправить").but_read
+	-if(extra2)
 		- for(var i = 0; i < extra2.length; i++)
 			//- Поставить проверку на авторство блога!
-			- var posting_date = extra2[i].date[0]+'-'+extra2[i].date[1]+'-'+extra2[i].date[2]+' '+extra2[i].date[3]+':'+extra2[i].date[4];
-			mixin comment(extra2[i].autor_name, posting_date, extra2[i].text)
+			mixin comment(extra2[i].autor_name, extra2[i].date, extra2[i].text)

@@ -153,7 +153,7 @@ function renderPost(res, num) {
 				res.redirect('/error');
 			}
 			else {
-				var time_post = time.conversion_arr(rows[0].date);
+				var time_post = time.conversion(rows[0].date);
 				var img_arr;
 				if(rows[0].imgs) {
 					img_arr = rows[0].imgs.split('|');
@@ -165,14 +165,13 @@ function renderPost(res, num) {
 					var i_cur = i + 1;
 					rows[0].text = rows[0].text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + num + '/' + img_arr[i] + '" alt="img">');
 				}
-				var comments;
 				if(rows[0].comment != 0) {
 					db_connect.query('SELECT * FROM ' + specific.name + '_comment WHERE `article` = ' + num, function(err, rows_com) {
 						rows_com.forEach(function(item) {
-							item.date = time.conversion_arr(item.date);
+							item.date = time.conversion(item.date);
 						});
 						renderJade(res, 'post', rows[0], time_post, rows_com);
-						console.log(rows_com);
+						console.log(time_post);
 					});
 				}
 				else {
@@ -183,7 +182,70 @@ function renderPost(res, num) {
 	});
 };
 
+//Рендер списка постов
+function list(res, type, num, obj) {
+	if(type == 1) {
+		db_connect.connect(function() {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC LIMIT ' + num + ', 10', function(err, rows) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					rows.forEach(function(item) {
+						if(item.text.length > 512) {
+							item.text = item.text.slice(0, 512) + '...';
+						}
+						item.date = time.conversion(item.date);
+						var img_arr;
+						if(item.imgs) {
+							img_arr = item.imgs.split('|');
+						}
+						else {
+							img_arr = [];
+						}
+						for(var i = 0; i <= img_arr.length; i++) {
+							var i_cur = i + 1;
+							item.text = item.text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + item.id + '/' + img_arr[i] + '" alt="img">');
+						}
+					});
+					renderJade(res, 'index', rows);
+				}
+			})
+		});
+	}
+	else if(type == 2) {
+		db_connect.connect(function() {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `rubric` = "' + obj + '" AND `pool` = 0 ORDER BY `id` DESC LIMIT ' + num + ', 10', function(err, rows) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					rows.forEach(function(item) {
+						if(item.text.length > 512) {
+							item.text = item.text.slice(0, 512) + '...';
+						}
+						item.date = time.conversion(item.date);
+						var img_arr;
+						if(item.imgs) {
+							img_arr = item.imgs.split('|');
+						}
+						else {
+							img_arr = [];
+						}
+						for(var i = 0; i <= img_arr.length; i++) {
+							var i_cur = i + 1;
+							item.text = item.text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + item.id + '/' + img_arr[i] + '" alt="img">');
+						}
+					});
+					renderJade(res, 'index', rows);
+				}
+			})
+		});
+	}
+}
+
 exports.jade = renderJade;
 exports.source = renderRes;
 exports.setting = setting;
 exports.post = renderPost;
+exports.list = list;
