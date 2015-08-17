@@ -112,4 +112,31 @@ $(document).ready(function() {
 	if(ref == 'unback') {
 		$('.wrong_file').show();
 	}
+	//Отображение панели
+	$.ajax('/panel_data', {
+		dataType: 'json',
+		success: function(data) {
+			console.log(data);
+			if(data.news) {
+				//Отображение новостей
+				$('<article class="pan pan_news"></article>').appendTo('section.panel');
+				for(k in data.news_data) {
+					$('<a href="/post/' + k + '"><article class="pan_list">' + data.news_data[k] + '</article></a>').prependTo('article.pan_news')
+				}
+				$('<article class="pan_title">Новое</article>').prependTo('article.pan_news');
+			}
+			if(data.rubric) {
+				//Отображение рубрик
+				$('<article class="pan pan_rub"></article>').appendTo('section.panel');
+				$('<article class="pan_title">Рубрики</article>').prependTo('article.pan_rub');
+				data.rubric_data.forEach(function(item) {
+					$('<a href="/rubric/' + item + '"><article class="pan pan_list">' + item + '</article></a>').appendTo('article.pan_rub');
+				});
+			}
+			if(data.archives) {
+				//Отображение арихива
+				//ДОРАБОТАТЬ. Разбиение по годам и месяцам
+			}
+		}
+	})
 });

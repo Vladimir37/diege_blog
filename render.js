@@ -260,7 +260,7 @@ function panel(res) {
 				res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
 				var panel_data = {};
 				db_connect.connect(function() {
-					if(frame.main_panel.news == 1) {
+					if(frame.main_panel.news == 2) {
 						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC LIMIT 10', function(err, rows) {
 							if(err) {
 								console.log(err);
@@ -280,7 +280,7 @@ function panel(res) {
 						readiness++;
 						checkPanel(res, readiness, panel_data);
 					}
-					if(frame.main_panel.brenchs == 1) {
+					if(frame.main_panel.brenchs == 2) {
 						db_connect.query('SELECT DISTINCT `rubric` FROM ' + specific.name + '_post', function(err, rows) {
 							if(err) {
 								console.log(err);
@@ -300,17 +300,21 @@ function panel(res) {
 						readiness++;
 						checkPanel(res, readiness, panel_data);
 					}
-					if(frame.main_panel.archives == 1) {
+					if(frame.main_panel.archives == 2) {
 						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, rows) {
 							panel_data.archives = true;
-							var date_arr = [];
+							panel_data.archives_data = {};
 							rows.forEach(function(item) {
 								var date_res = time.conversion_arr(item.date);
-								var result = date_res[2] + '-' + date_res[1];
-								date_arr.push(result);
+								panel_data.archives_data[date_res[2]] = [];
 							});
-							date_arr = unique(date_arr);
-							panel_data.archives_data = date_arr;
+							rows.forEach(function(item) {
+								var date_res = time.conversion_arr(item.date);
+								panel_data.archives_data[date_res[2]].push(date_res[1]);
+							});
+							for(k in panel_data.archives_data) {
+								panel_data.archives_data[k] = unique(panel_data.archives_data[k]);
+							}
 							readiness++;
 							checkPanel(res, readiness, panel_data);
 						});
@@ -320,11 +324,6 @@ function panel(res) {
 						checkPanel(res, readiness, panel_data);
 					}
 				});
-				// if(readiness == 3) {
-				// 	var panel_result = JSON.stringify(panel_data);
-				// 	res.end(panel_result);
-				// }
-				// console.log(readiness);
 			}
 			else {
 				//Панель отключена
@@ -344,6 +343,7 @@ function unique(arr) {
 	return Object.keys(obj);
 };
 
+//Проверка завершения формирования JSONа панели
 function checkPanel(res, num, obj) {
 	if(num == 3) {
 		var panel_result = JSON.stringify(obj);
