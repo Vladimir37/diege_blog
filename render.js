@@ -246,8 +246,114 @@ function handlingList(res, rows, cols, num, type) {
 	renderJade(res, 'index', rows, pages, type);
 };
 
+//Рендер JSON объекта с данными о панели
+function panel(res) {
+	fs.readFile('blog/blogger.json', function(err, data) {
+		if(err) {
+			console.log(err);
+		}
+		else {
+			frame = JSON.parse(data);
+			var readiness = 0;
+			if(frame.main_panel.enabled == 1) {
+				//Основное
+				res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
+				var panel_data = {};
+				db_connect.connect(function() {
+					if(frame.main_panel.news == 1) {
+						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC LIMIT 10', function(err, rows) {
+							if(err) {
+								console.log(err);
+							}
+							else {
+								panel_data.news = true;
+								panel_data.news_data = {};
+								rows.forEach(function(item) {
+									panel_data.news_data[item.id] = item.name;
+								});
+								readiness++;
+								checkPanel(res, readiness, panel_data);
+							}
+						})
+					}
+					else {
+						readiness++;
+						checkPanel(res, readiness, panel_data);
+					}
+					if(frame.main_panel.brenchs == 1) {
+						db_connect.query('SELECT DISTINCT `rubric` FROM ' + specific.name + '_post', function(err, rows) {
+							if(err) {
+								console.log(err);
+							}
+							else {
+								panel_data.rubric = true;
+								panel_data.rubric_data = [];
+								rows.forEach(function(item) {
+									panel_data.rubric_data.push(item.rubric);
+								});
+								readiness++;
+								checkPanel(res, readiness, panel_data);
+							}
+						});
+					}
+					else {
+						readiness++;
+						checkPanel(res, readiness, panel_data);
+					}
+					if(frame.main_panel.archives == 1) {
+						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, rows) {
+							panel_data.archives = true;
+							var date_arr = [];
+							rows.forEach(function(item) {
+								var date_res = time.conversion_arr(item.date);
+								var result = date_res[2] + '-' + date_res[1];
+								date_arr.push(result);
+							});
+							date_arr = unique(date_arr);
+							panel_data.archives_data = date_arr;
+							readiness++;
+							checkPanel(res, readiness, panel_data);
+						});
+					}
+					else {
+						readiness++;
+						checkPanel(res, readiness, panel_data);
+					}
+				});
+				// if(readiness == 3) {
+				// 	var panel_result = JSON.stringify(panel_data);
+				// 	res.end(panel_result);
+				// }
+				// console.log(readiness);
+			}
+			else {
+				//Панель отключена
+				res.end();
+			}
+		}
+	});
+};
+
+//Только уникальные элементы массива
+function unique(arr) {
+	var obj = {};
+	for (var i = 0; i < arr.length; i++) {
+		var str = arr[i];
+		obj[str] = true; // запомнить строку в виде свойства объекта
+	}
+	return Object.keys(obj);
+};
+
+function checkPanel(res, num, obj) {
+	if(num == 3) {
+		var panel_result = JSON.stringify(obj);
+		res.end(panel_result);
+	}
+};
+
 exports.jade = renderJade;
 exports.source = renderRes;
 exports.setting = setting;
 exports.post = renderPost;
 exports.list = list;
+exports.panel = panel;

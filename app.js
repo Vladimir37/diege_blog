@@ -70,6 +70,9 @@ app.post('/res', function(req, res) {
 app.get('/settings', function(req, res) {
 	render.setting(res);
 });
+app.get('/panel_data', function(req, res) {
+	render.panel(res);
+});
 app.post('/edit_pic', function(req, res) {
 	control.editingBack(req.body, res); 
 });
