@@ -2,7 +2,7 @@ extends layout
 
 block content	
 	- for(var i = 0; i < added.length; i++)
-		mixin post(added[i].name, added[i].text, added[i].date, added[i].comment, '/post/' + added[i].id, added[i].rubric)
+		mixin post(added[i].name, added[i].text, added[i].date, added[i].comment, '/post_pool/' + added[i].id, added[i].rubric)
 	- if(extra[0] != 0)
 		a(href=extra2 + (+extra[0] - 1))
 			article.page_control.but_read.page_control_prev Назад

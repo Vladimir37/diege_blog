@@ -145,7 +145,7 @@ function ribbon_color(type, col_1, col_2) {
 //Рендер поста
 function renderPost(res, num) {
 	db_connect.connect(function() {
-		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num, function(err, rows) {
+		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 0', function(err, rows) {
 			if(err) {
 				console.log(err);
 			}
@@ -181,11 +181,50 @@ function renderPost(res, num) {
 	});
 };
 
+//Рендер поста из пула
+function renderPostPool(res, num) {
+	db_connect.connect(function() {
+		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 1', function(err, rows) {
+			if(err) {
+				console.log(err);
+			}
+			else if(rows == '') {
+				res.redirect('/error');
+			}
+			else {
+				var time_post = time.conversion(rows[0].date);
+				var img_arr;
+				if(rows[0].imgs) {
+					img_arr = rows[0].imgs.split('|');
+				}
+				else {
+					img_arr = [];
+				}
+				for(var i = 0; i <= img_arr.length; i++) {
+					var i_cur = i + 1;
+					rows[0].text = rows[0].text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + num + '/' + img_arr[i] + '" alt="img">');
+				}
+				if(rows[0].comment != 0) {
+					db_connect.query('SELECT * FROM ' + specific.name + '_comment WHERE `article` = ' + num, function(err, rows_com) {
+						rows_com.forEach(function(item) {
+							item.date = time.conversion(item.date);
+						});
+						renderJade(res, 'post_pool', rows[0], time_post, rows_com);
+					});
+				}
+				else {
+					renderJade(res, 'post_pool', rows[0], time_post);
+				}
+			}
+		});
+	});
+};
+
 //Рендер списка постов
 function list(res, type, num, obj) {
 	if(type == 1) {
 		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, rows) {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
 				if(err) {
 					console.log(err);
 				}
@@ -204,7 +243,7 @@ function list(res, type, num, obj) {
 	}
 	else if(type == 2) {
 		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `rubric` = "' + obj + '" AND `pool` = 0 ORDER BY `id` DESC', function(err, rows) {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `rubric` = "' + obj + '" AND `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
 				if(err) {
 					console.log(err);
 				}
@@ -223,7 +262,7 @@ function list(res, type, num, obj) {
 	}
 	else if(type == 3) {
 		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, all_rows) {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, all_rows) {
 				if(err) {
 					console.log(err);
 				}
@@ -249,7 +288,7 @@ function list(res, type, num, obj) {
 	}
 	else if(type == 4) {
 		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, all_rows) {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, all_rows) {
 				if(err) {
 					console.log(err);
 				}
@@ -273,10 +312,29 @@ function list(res, type, num, obj) {
 			});
 		});
 	}
+	else if(type == 5) {
+		db_connect.connect(function() {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 1 ORDER BY `date` DESC', function(err, rows) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					var cols = Math.ceil(rows.length / 10) - 1;
+					var need_rows = rows.slice(num*10, num*10+10);
+					if(need_rows == '') {
+						res.redirect('/error')
+					}
+					else {
+						handlingList(res, need_rows, cols, num, '/pool/', true);
+					}
+				}
+			})
+		});
+	}
 };
 
 //Обработка и рендер списка постов
-function handlingList(res, rows, cols, num, type) {
+function handlingList(res, rows, cols, num, type, pool) {
 	rows.forEach(function(item) {
 		if(item.text.length > 512) {
 			item.text = item.text.slice(0, 512) + '...';
@@ -295,7 +353,12 @@ function handlingList(res, rows, cols, num, type) {
 		}
 	});
 	var pages = [num, cols];
-	renderJade(res, 'index', rows, pages, type);
+	if(pool) {
+		renderJade(res, 'index_pool', rows, pages, type);
+	}
+	else {
+		renderJade(res, 'index', rows, pages, type);
+	}
 };
 
 //Рендер JSON объекта с данными о панели
@@ -313,7 +376,7 @@ function panel(res) {
 				var panel_data = {};
 				db_connect.connect(function() {
 					if(frame.main_panel.news == 2) {
-						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC LIMIT 10', function(err, rows) {
+						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC LIMIT 10', function(err, rows) {
 							if(err) {
 								console.log(err);
 							}
@@ -321,7 +384,7 @@ function panel(res) {
 								panel_data.news = true;
 								panel_data.news_data = {};
 								rows.forEach(function(item) {
-									panel_data.news_data[item.id] = item.name;
+									panel_data.news_data['s' + item.id] = item.name;
 								});
 								readiness++;
 								checkPanel(res, readiness, panel_data);
@@ -353,7 +416,7 @@ function panel(res) {
 						checkPanel(res, readiness, panel_data);
 					}
 					if(frame.main_panel.archives == 2) {
-						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, rows) {
+						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
 							panel_data.archives = true;
 							panel_data.archives_data = {};
 							rows.forEach(function(item) {
@@ -407,5 +470,6 @@ exports.jade = renderJade;
 exports.source = renderRes;
 exports.setting = setting;
 exports.post = renderPost;
+exports.pool_post = renderPostPool;
 exports.list = list;
 exports.panel = panel;

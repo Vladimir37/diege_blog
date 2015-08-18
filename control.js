@@ -250,6 +250,32 @@ function add_comment(req, res, num) {
 	});
 };
 
+//Операции с пулом
+function pool(res, num, type) {
+	db_connect.connect(function() {
+		if(type == 1) {
+			db_connect.query('UPDATE `' + specific.name + '_post` SET `date`="' + time.current() + '", `pool`= "0" WHERE `id`=' + num, function(err) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					res.redirect('/');
+				}
+			});
+		}
+		else if(type == 2) {
+			db_connect.query('DELETE FROM `' + specific.name + '_post` WHERE `id`=' + num, function(err) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					res.redirect('/pool');
+				}
+			});
+		}
+	});
+};
+
 //Безопастность текста
 function safetyText(text) {
 	var res = text.replace(/\;/g, '&#59;');
@@ -267,3 +293,4 @@ exports.editingBack = editingBack;
 exports.createBack = createBack;
 exports.add_post = add_post;
 exports.add_comment = add_comment;
+exports.pool = pool;

@@ -121,7 +121,7 @@ $(document).ready(function() {
 				//Отображение новостей
 				$('<article class="pan pan_news"></article>').appendTo('section.panel');
 				for(k in data.news_data) {
-					$('<a href="/post/' + k + '"><article class="pan_list">' + data.news_data[k] + '</article></a>').prependTo('article.pan_news')
+					$('<a href="/post/' + k.slice(1) + '"><article class="pan_list">' + data.news_data[k] + '</article></a>').appendTo('article.pan_news')
 				}
 				$('<article class="pan_title">Новое</article>').prependTo('article.pan_news');
 			}

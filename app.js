@@ -39,6 +39,15 @@ app.get('/post/:name', function(req, res) {
 		res.redirect('/error');
 	}
 });
+app.get('/post_pool/:name', function(req, res) {
+	var name = req.params.name;
+	if(re_num.test(name)) {
+		render.pool_post(res, name);
+	}
+	else {
+		res.redirect('/error');
+	}
+});
 app.post('/post/:name', function(req, res) {
 	var name = req.params.name;
 	control.add_comment(req, res, name);
@@ -90,6 +99,27 @@ app.get('/month/:name/:page', function(req, res) {
 	var page = req.params.page;
 	if(re_num.test(page) && re_month.test(name)) {
 		render.list(res, 4, page, name);
+	}
+	else {
+		res.redirect('/error');
+	}
+});
+app.get('/pool', function(req, res) {
+	render.list(res, 5, 0);
+});
+app.get('/pool/:name', function(req, res) {
+	var name = req.params.name;
+	if(re_num.test(name)) {
+		render.list(res, 5, name);
+	}
+	else {
+		res.redirect('/error');
+	}
+});
+app.post('/post_pool/:name', function(req, res) {
+	var name = req.params.name;
+	if(re_num.test(name)) {
+		control.pool(res, name, req.body.type);
 	}
 	else {
 		res.redirect('/error');
