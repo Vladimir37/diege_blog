@@ -191,7 +191,7 @@ function list(res, type, num, obj) {
 				}
 				else {
 					var cols = Math.ceil(rows.length / 10) - 1;
-					var need_rows = rows.slice(num*10, num*10+10)
+					var need_rows = rows.slice(num*10, num*10+10);
 					if(need_rows == '') {
 						res.redirect('/error')
 					}
@@ -210,7 +210,7 @@ function list(res, type, num, obj) {
 				}
 				else {
 					var cols = Math.ceil(rows.length / 10) - 1;
-					var need_rows = rows.slice(num*10, num*10+10)
+					var need_rows = rows.slice(num*10, num*10+10);
 					if(need_rows == '') {
 						res.redirect('/error')
 					}
@@ -219,6 +219,58 @@ function list(res, type, num, obj) {
 					}
 				}
 			})
+		});
+	}
+	else if(type == 3) {
+		db_connect.connect(function() {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, all_rows) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					var rows = [];
+					all_rows.forEach(function(item) {
+						var date_arr = time.conversion_arr(item.date);
+						if(date_arr[2] == obj) {
+							rows.push(item);
+						}
+					});
+					var cols = Math.ceil(rows.length / 10) - 1;
+					var need_rows = rows.slice(num*10, num*10+10);
+					if(need_rows == '') {
+						res.redirect('/error')
+					}
+					else {
+						handlingList(res, need_rows, cols, num, '/year/' + obj + '/');
+					}
+				}
+			});
+		});
+	}
+	else if(type == 4) {
+		db_connect.connect(function() {
+			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `id` DESC', function(err, all_rows) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					var rows = [];
+					all_rows.forEach(function(item) {
+						var date_arr = time.conversion_arr(item.date);
+						if(date_arr[1] == obj) {
+							rows.push(item);
+						}
+					});
+					var cols = Math.ceil(rows.length / 10) - 1;
+					var need_rows = rows.slice(num*10, num*10+10);
+					if(need_rows == '') {
+						res.redirect('/error')
+					}
+					else {
+						handlingList(res, need_rows, cols, num, '/month/' + obj + '/');
+					}
+				}
+			});
 		});
 	}
 };

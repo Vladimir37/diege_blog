@@ -135,8 +135,56 @@ $(document).ready(function() {
 			}
 			if(data.archives) {
 				//Отображение арихива
-				//ДОРАБОТАТЬ. Разбиение по годам и месяцам
+				$('<article class="pan pan_arh"></article>').appendTo('section.panel');
+				$('<article class="pan_title">Архив</article>').prependTo('article.pan_arh');
+				for(k in data.archives_data) {
+					$('<a href="/year/' + k + '"><article class="pan pan_list pan_year">' + k + '</article></a>').appendTo('article.pan_arh');
+					data.archives_data[k].forEach(function(item) {
+						$('<a href="/month/' + item + '"><article class="pan pan_list">' + month(item) + '</article></a>').appendTo('article.pan_arh');
+					});
+				}
 			}
 		}
-	})
+	});
+	//Преобразование месяцев
+	function month(name) {
+		switch(name) {
+			case '01':
+				return 'Январь';
+				break;
+			case '02':
+				return 'Февраль';
+				break;
+			case '03':
+				return 'Март';
+				break;
+			case '04':
+				return 'Апрель';
+				break;
+			case '05':
+				return 'Май';
+				break;
+			case '06':
+				return 'Июнь';
+				break;
+			case '07':
+				return 'Июль';
+				break;
+			case '08':
+				return 'Август';
+				break;
+			case '09':
+				return 'Сентябрь';
+				break;
+			case '10':
+				return 'Октябрь';
+				break;
+			case '11':
+				return 'Ноябрь';
+				break;
+			case '12':
+				return 'Декабрь';
+				break;
+		}
+	};
 });

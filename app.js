@@ -11,7 +11,9 @@ var time = require('./time');
 var app = express();
 app.use(parser());
 
-var re_num = new RegExp(/[0-9]/);
+var re_num = new RegExp(/^[0-9]{1,}$/);
+var re_year = new RegExp(/^[0-9]{4,4}$/);
+var re_month = new RegExp(/^[0-9]{2,2}$/);
 
 app.get('/', function(req, res) {
 	res.redirect('/index');
@@ -50,6 +52,44 @@ app.get('/rubric/:name/:page', function(req, res) {
 	var page = req.params.page;
 	if(re_num.test(page)) {
 		render.list(res, 2, page, name);
+	}
+	else {
+		res.redirect('/error');
+	}
+});
+app.get('/year/:name', function(req, res) {
+	var name = req.params.name;
+	if(re_year.test(name)) {
+		render.list(res, 3, 0, name);
+	}
+	else {
+		res.redirect('/error');
+	}
+});
+app.get('/year/:name/:page', function(req, res) {
+	var name = req.params.name;
+	var page = req.params.page;
+	if(re_num.test(page) && re_year.test(name)) {
+		render.list(res, 3, page, name);
+	}
+	else {
+		res.redirect('/error');
+	}
+});
+app.get('/month/:name', function(req, res) {
+	var name = req.params.name;
+	if(re_month.test(name)) {
+		render.list(res, 4, 0, name);
+	}
+	else {
+		res.redirect('/error');
+	}
+});
+app.get('/month/:name/:page', function(req, res) {
+	var name = req.params.name;
+	var page = req.params.page;
+	if(re_num.test(page) && re_month.test(name)) {
+		render.list(res, 4, page, name);
 	}
 	else {
 		res.redirect('/error');
