@@ -100,7 +100,6 @@ function add_post(req, res) {
 		var normal_imgs_name = [];
 		for(k in files) {
 			if(files[k].type.slice(0, 6) == 'image/') {
-				//console.log(files[k].name + ' HURRAY!');
 				normal_imgs_path.push(files[k].path);
 				normal_imgs_name.push(files[k].name);
 				img_num++;

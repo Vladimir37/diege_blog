@@ -116,7 +116,6 @@ $(document).ready(function() {
 	$.ajax('/panel_data', {
 		dataType: 'json',
 		success: function(data) {
-			console.log(data);
 			if(data.news) {
 				//Отображение новостей
 				$('<article class="pan pan_news"></article>').appendTo('section.panel');
@@ -144,6 +143,7 @@ $(document).ready(function() {
 					});
 				}
 			}
+			//Отображение статей
 		}
 	});
 	//Преобразование месяцев

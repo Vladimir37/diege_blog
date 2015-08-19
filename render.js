@@ -439,6 +439,7 @@ function panel(res) {
 						checkPanel(res, readiness, panel_data);
 					}
 				});
+				//Рендер ссылок на статьи в ленте
 			}
 			else {
 				//Панель отключена
