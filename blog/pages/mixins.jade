@@ -39,3 +39,14 @@ mixin comment(name, date, text)
 			article.comm_name=name
 			article.comm_date=date
 		article.comm_text!=text
+//- Статья в шапке
+mixin link(id, name, db_name)
+	article.link
+		article.name=name
+		article.db_name=db_name
+		article.link_del
+			form(action="" method="post")
+				input(type="hidden" name="type" value="1")
+				input(type="hidden" name="target" value=name)
+				input(type="submit" value="Удалить").but_read
+		article.clearfix

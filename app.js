@@ -125,6 +125,12 @@ app.post('/post_pool/:name', function(req, res) {
 		res.redirect('/error');
 	}
 });
+app.get('/links', function(req, res) {
+	render.links(res);
+});
+app.post('/links', function(req, res) {
+	control.link(res, req.body);
+});
 app.get('/admin', function(req, res) {
 	render.jade(res, 'admin');
 });

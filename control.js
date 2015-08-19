@@ -57,23 +57,7 @@ function editing(changed, res) {
 		frame.button.color = changed.but_col;
 		frame.button.volime = changed.vol;
 		frame.button.flow = changed.flo;
-		var result = JSON.stringify(frame);
-		fs.open('blog/blogger.json', 'w', function(err, desc) {
-			if(err) {
-				console.log(err);
-			}
-			else {
-				fs.write(desc, result, function(err) {
-					if(err) {
-						console.log(err);
-					}
-					else {
-						console.log('Win!');
-						res.redirect('/');
-					}
-				})
-			}
-		});
+		editFrame(res, frame, '');
 	});
 }
 
@@ -82,23 +66,7 @@ function editingBack(changed, res) {
 		frame = JSON.parse(data);
 		frame.content.background = changed.pic;
 		frame.content.back_type = changed.back_type;
-		var result = JSON.stringify(frame);
-		fs.open('blog/blogger.json', 'w', function(err, desc) {
-			if(err) {
-				console.log(err);
-			}
-			else {
-				fs.write(desc, result, function(err) {
-					if(err) {
-						console.log(err);
-					}
-					else {
-						console.log('Win!');
-						res.redirect('/');
-					}
-				});
-			}
-		});
+		editFrame(res, frame, '');
 	});
 };
 
@@ -112,23 +80,7 @@ function createBack(req, res) {
 			console.log(files.back);
 			if(files.back.type.slice(0,6) == 'image/'){
 				fs.rename(files.back.path, 'blog/source/back-blog/' + frame.main.max_back, function() {
-					var result = JSON.stringify(frame);
-					fs.open('blog/blogger.json', 'w', function(err, desc) {
-						if(err) {
-							console.log(err);
-						}
-						else {
-							fs.write(desc, result, function(err) {
-								if(err) {
-									console.log(err);
-								}
-								else {
-									console.log('Win!');
-									res.redirect('/background');
-								}
-							});
-						}
-					});
+					editFrame(res, frame, '');
 				});
 			}
 			else {
@@ -276,6 +228,29 @@ function pool(res, num, type) {
 	});
 };
 
+//Операции со ссылками
+function link(res, data) {
+	if(data.type == 1 && data.target) {
+		var frame;
+		fs.readFile('blog/blogger.json', function(err, result) {
+			frame = JSON.parse(result);
+			delete frame.top_panel.articles[data.target];
+			editFrame(res, frame, 'links');
+		});
+	}
+	else if(data.type == 2 && data.name && data.post) {
+		var frame;
+		fs.readFile('blog/blogger.json', function(err, result) {
+			frame = JSON.parse(result);
+			frame.top_panel.articles[data.name] = data.post;
+			editFrame(res, frame, 'links');
+		});
+	}
+	else {
+		res.redirect('/error');
+	}
+};
+
 //Безопастность текста
 function safetyText(text) {
 	var res = text.replace(/\;/g, '&#59;');
@@ -288,9 +263,30 @@ function safetyText(text) {
 	return res;
 };
 
+//Замена blogger.json
+function editFrame(res, obj, next) {
+	var result = JSON.stringify(obj);
+	fs.open('blog/blogger.json', 'w', function(err, desc) {
+		if(err) {
+			console.log(err);
+		}
+		else {
+			fs.write(desc, result, function(err) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					res.redirect('/' + next);
+				}
+			});
+		}
+	});
+};
+
 exports.editing = editing;
 exports.editingBack = editingBack;
 exports.createBack = createBack;
 exports.add_post = add_post;
 exports.add_comment = add_comment;
 exports.pool = pool;
+exports.link = link;

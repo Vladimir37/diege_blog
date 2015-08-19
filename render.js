@@ -448,6 +448,32 @@ function panel(res) {
 	});
 };
 
+//Рендер ссылок
+function links_render(res) {
+	fs.readFile('blog/blogger.json', function(err, data) {
+		if(err) {
+			console.log(err);
+		}
+		else {
+			frame = JSON.parse(data);
+		}
+	});
+	db_connect.connect(function() {
+		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
+			if(err) {
+				console.log(err);
+			}
+			else {
+				var all_posts = {};
+				rows.forEach(function(item) {
+					all_posts[item.id] = item.id + '. ' + item.name;
+				});
+				renderJade(res, 'links', all_posts);
+			}
+		});
+	});
+};
+
 //Только уникальные элементы массива
 function unique(arr) {
 	var obj = {};
@@ -473,3 +499,4 @@ exports.post = renderPost;
 exports.pool_post = renderPostPool;
 exports.list = list;
 exports.panel = panel;
+exports.links = links_render;

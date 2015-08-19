@@ -264,3 +264,56 @@ body {
 .publish {
 	text-align: center;
 }
+.link {
+	border: 2px solid black;
+	margin: 20px 0;
+	padding: 10px;
+	background: #ADADAD;
+	.name {
+		font-size: 16px;
+		font-weight: bold;
+		border: 1px solid black;
+		padding: 5px;
+		width: 330px;
+		margin-bottom: 10px;
+		background: white;
+	}
+	.db_name {
+		font-size: 16px;
+		font-weight: bold;
+		border: 1px solid black;
+		padding: 5px;
+		width: 330px;
+		margin-bottom: 10px;
+		background: white;
+	}
+	.link_del {
+		float: right;
+	}
+}
+.add_link {
+	text-align: center;
+	input[type="text"] {
+		margin: 20px;
+		font-size: 18px;
+		width: 300px;
+	}
+	.select {
+		border: 2px solid black;
+		height: 200px;
+		overflow-y: scroll;
+		text-align: left;
+		margin-bottom: 20px;
+		label {
+			display: block;
+			font-size: 18px;
+		}
+		input:checked + label {
+			background: grey;
+			color: white;
+		}
+		input {
+			display: none;
+		}
+	}
+}
