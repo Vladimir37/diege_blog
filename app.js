@@ -1,10 +1,10 @@
 var http = require('http');
 var express = require('express');
-var router = require('./router');
-var render = require('./render');
 var parser = require('body-parser');
 var fs = require('fs');
 
+var router = require('./router');
+var render = require('./render');
 var control = require('./control');
 var time = require('./time');
 

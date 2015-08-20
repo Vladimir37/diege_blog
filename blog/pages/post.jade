@@ -2,11 +2,11 @@ extends layout
 
 block content
 	section.post_main
-		h3=added.name
+		h3.post_tit=added.name
 		article.time_post=extra
 		a(href="/rubric/" + added.rubric)
 			article.rubric_post Рубрика: #{added.rubric}
-		article.content_post!=added.text
+		article.content_post.data_post!=added.text
 	section.comment
 		- if(main.comments == 1)
 			article.send_comment
