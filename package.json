@@ -6,7 +6,7 @@
     "body-parser": "*",
     "formidable": "*",
     "cookie-parser": "*",
-    "redis": "*",
+    "easy-encryption": "*",
     "random-token": "*"
   }
 }

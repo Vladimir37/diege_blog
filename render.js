@@ -1,6 +1,7 @@
 var fs = require('fs');
 var jade = require('jade');
 var mysql = require('mysql');
+var Crypt = require('easy-encryption');
 var time = require('./time');
 
 //Подключение к базе
@@ -14,6 +15,12 @@ fs.readFile('blog/db.json', function(err, resp) {
 	}
 });
 
+//Данные расшифровки куков
+var crypt = new Crypt({
+	secret: 'vladimir_parol_37', 
+	iterations: 3700
+});
+
 //Чтение спецификации
 var specific;
 fs.readFile('blog/specification.json', function(err, resp) {
@@ -24,6 +31,22 @@ fs.readFile('blog/specification.json', function(err, resp) {
 		specific = JSON.parse(resp);
 	}
 });
+
+//Контроль авторизации
+function auth_control(cookie) {
+	if(cookie) {
+		var key = crypt.decrypt(cookie);
+		if(key == specific.key) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		return false;
+	}
+};
 
 //Рендеринг jade
 function renderJade(res, name, addon, extra, extra2) {
@@ -512,3 +535,4 @@ exports.pool_post = renderPostPool;
 exports.list = list;
 exports.panel = panel;
 exports.links = links_render;
+exports.auth_control = auth_control;

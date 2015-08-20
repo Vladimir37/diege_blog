@@ -2,6 +2,7 @@ var http = require('http');
 var express = require('express');
 var parser = require('body-parser');
 var fs = require('fs');
+var cookie = require('cookie-parser');
 
 var router = require('./router');
 var render = require('./render');
@@ -10,10 +11,22 @@ var time = require('./time');
 
 var app = express();
 app.use(parser());
+app.use(cookie());
 
 var re_num = new RegExp(/^[0-9]{1,}$/);
 var re_year = new RegExp(/^[0-9]{4,4}$/);
 var re_month = new RegExp(/^[0-9]{2,2}$/);
+
+//test
+app.get('/test_log', function(req, res) {
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		res.end('Win!');
+	}
+	else {
+		res.end('Fail.');
+	}
+});
+// end test
 
 app.get('/', function(req, res) {
 	res.redirect('/index');
@@ -169,6 +182,7 @@ app.get('*', function(req, res) {
 
 //Чтение спецификации
 var specific;
+var auth_cookie;
 fs.readFile('blog/specification.json', function(err, resp) {
 	if(err) {
 		console.log(err);
@@ -176,5 +190,7 @@ fs.readFile('blog/specification.json', function(err, resp) {
 	else {
 		specific = JSON.parse(resp);
 		http.createServer(app).listen(specific.port);
+		//Название нужного кука для авторизации
+		auth_cookie = 'aut.' + specific.name + '.diege';
 	}
 });
