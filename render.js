@@ -73,6 +73,7 @@ function setting(res) {
 			res.write('h1 {text-align: ' + align(frame.head.one_or) + '; color: ' + frame.head.one_col + ';}\n');
 			res.write('h2 {text-align: ' + align(frame.head.two_or) + '; color: ' + frame.head.two_col + ';}\n');
 			res.write('.ribbon {background: ' + ribbon_color(frame.top_panel.back_type, frame.top_panel.back_color_f, frame.top_panel.back_color_s) + '; color: ' + frame.top_panel.color + '; height: ' + frame.top_panel.height * 50 + 'px;}\n');
+			res.write('nav {line-height: ' + frame.top_panel.height * 50 + 'px;}\n');
 			res.write('.panel {color: ' + frame.main_panel.color + '}\n');
 			res.write('.pan_title {background: ' + frame.main_panel.back_title + '}\n');
 			res.write('.pan_list {background: ' + frame.main_panel.back_main + '}\n');
@@ -438,8 +439,18 @@ function panel(res) {
 						readiness++;
 						checkPanel(res, readiness, panel_data);
 					}
+					//Рендер ссылок на статьи в ленте
+					if(Object.keys(frame.top_panel.articles) != '') {
+						panel_data.links = true;
+						panel_data.links_data = frame.top_panel.articles;
+						readiness++;
+						checkPanel(res, readiness, panel_data);
+					}
+					else {
+						readiness++;
+						checkPanel(res, readiness, panel_data);
+					}
 				});
-				//Рендер ссылок на статьи в ленте
 			}
 			else {
 				//Панель отключена
@@ -487,7 +498,7 @@ function unique(arr) {
 
 //Проверка завершения формирования JSONа панели
 function checkPanel(res, num, obj) {
-	if(num == 3) {
+	if(num == 4) {
 		var panel_result = JSON.stringify(obj);
 		res.end(panel_result);
 	}
