@@ -250,6 +250,38 @@ function link(res, data) {
 	}
 };
 
+//Редактирование поста
+function editingPost(res, data, num) {
+	if(data.type == 1) {
+		//Редактирование
+		var text = safetyText(data.main_text);
+		var rubric = safetyText(data.rubric);
+		var title = safetyText(data.title);
+		db_connect.connect(function() {
+			db_connect.query('UPDATE `' + specific.name + '_post` SET `name` = "' + title + '", `text`="' + text + '", `rubric`="' + rubric + '" WHERE `id`=' + num, function(err) {
+				if(err) {
+					console.log(err);
+				}
+				res.redirect('/post/' + num);
+			});
+		});
+	}
+	else if(data.type == 2) {
+		//Удаление
+		db_connect.connect(function() {
+			db_connect.query('DELETE FROM `' + specific.name + '_post` WHERE `id` = ' + num, function(err) {
+				if(err) {
+					console.log(err);
+				}
+				res.redirect('/');
+			});
+		});
+	}
+	else {
+		res.redirect('/error');
+	}
+};
+
 //Безопастность текста
 function safetyText(text) {
 	var res = text.replace(/\;/g, '&#59;');
@@ -289,3 +321,4 @@ exports.add_post = add_post;
 exports.add_comment = add_comment;
 exports.pool = pool;
 exports.link = link;
+exports.postEdit = editingPost;

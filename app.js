@@ -20,10 +20,10 @@ var re_month = new RegExp(/^[0-9]{2,2}$/);
 //test
 app.get('/test_log', function(req, res) {
 	if(render.auth_control(req.cookies[auth_cookie])) {
-		res.end('Win!');
+		//
 	}
 	else {
-		res.end('Fail.');
+		res.redirect('/error');
 	}
 });
 // end test
@@ -44,18 +44,34 @@ app.get('/index/:name', function(req, res) {
 	}
 });
 app.get('/post/:name', function(req, res) {
-	var name = req.params.name;
-	if(re_num.test(name)) {
-		render.post(res, name);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		var name = req.params.name;
+		if(re_num.test(name)) {
+			render.post(res, name, 1);
+		}
+		else {
+			res.redirect('/error');
+		}
 	}
 	else {
-		res.redirect('/error');
+		var name = req.params.name;
+		if(re_num.test(name)) {
+			render.post(res, name, 0);
+		}
+		else {
+			res.redirect('/error');
+		}
 	}
 });
 app.get('/post_pool/:name', function(req, res) {
-	var name = req.params.name;
-	if(re_num.test(name)) {
-		render.pool_post(res, name);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		var name = req.params.name;
+		if(re_num.test(name)) {
+			render.pool_post(res, name);
+		}
+		else {
+			res.redirect('/error');
+		}
 	}
 	else {
 		res.redirect('/error');
@@ -63,7 +79,17 @@ app.get('/post_pool/:name', function(req, res) {
 });
 app.post('/post/:name', function(req, res) {
 	var name = req.params.name;
-	control.add_comment(req, res, name);
+	if(req.body.type) {
+		if(render.auth_control(req.cookies[auth_cookie])) {
+			control.postEdit(res, req.body, name);
+		}
+		else {
+			res.redirect('/error');
+		}
+	}
+	else {
+		control.add_comment(req, res, name);
+	}
 });
 app.get('/rubric/:name', function(req, res) {
 	var name = req.params.name;
@@ -118,43 +144,88 @@ app.get('/month/:name/:page', function(req, res) {
 	}
 });
 app.get('/pool', function(req, res) {
-	render.list(res, 5, 0);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		render.list(res, 5, 0);
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.get('/pool/:name', function(req, res) {
-	var name = req.params.name;
-	if(re_num.test(name)) {
-		render.list(res, 5, name);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		var name = req.params.name;
+		if(re_num.test(name)) {
+			render.list(res, 5, name);
+		}
+		else {
+			res.redirect('/error');
+		}
 	}
 	else {
 		res.redirect('/error');
 	}
 });
 app.post('/post_pool/:name', function(req, res) {
-	var name = req.params.name;
-	if(re_num.test(name)) {
-		control.pool(res, name, req.body.type);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		var name = req.params.name;
+		if(re_num.test(name)) {
+			control.pool(res, name, req.body.type);
+		}
+		else {
+			res.redirect('/error');
+		}
 	}
 	else {
 		res.redirect('/error');
 	}
 });
 app.get('/links', function(req, res) {
-	render.links(res);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		render.links(res);
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.post('/links', function(req, res) {
-	control.link(res, req.body);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		control.link(res, req.body);
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.get('/admin', function(req, res) {
-	render.jade(res, 'admin');
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		render.jade(res, 'admin');
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.get('/posting', function(req, res) {
-	render.jade(res, 'posting')
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		render.jade(res, 'posting')
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.post('/posting', function(req, res) {
-	control.add_post(req, res);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		control.add_post(req, res);
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.post('/res', function(req, res) {
-	control.editing(req.body, res); 
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		control.editing(req.body, res); 
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.get('/settings', function(req, res) {
 	render.setting(res);
@@ -163,15 +234,30 @@ app.get('/panel_data', function(req, res) {
 	render.panel(res);
 });
 app.post('/edit_pic', function(req, res) {
-	control.editingBack(req.body, res); 
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		control.editingBack(req.body, res); 
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.post('/new_back', function(req, res) {
-	control.createBack(req, res);
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		control.createBack(req, res);
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.get('/background', function(req, res) {
-	fs.readdir('blog/source/back-blog/', function(err, files) {
-		render.jade(res, 'background', files);
-	});
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		fs.readdir('blog/source/back-blog/', function(err, files) {
+			render.jade(res, 'background', files);
+		});
+	}
+	else {
+		res.redirect('/error');
+	}
 });
 app.get('/error', function(req, res) {
 	render.jade(res, 'error')

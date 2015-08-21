@@ -152,6 +152,26 @@ $(document).ready(function() {
 			}
 		}
 	});
+	//Редактирование постов
+	$('#edit_post').click(function() {
+		$("article.content_post.data_post").replaceWith(function(){
+			$('article.content_post.data_post img').replaceWith('[ЗагруженноеИзображение]');
+			var self = this;
+			var inner_text = $(this).html();
+			for(var i = 1; i < 4; i++) {
+				inner_text = inner_text.replace('[ЗагруженноеИзображение]', '[ЗагруженноеИзображение' + i + ']');
+			};
+			return '<textarea name="main_text" class="content_post data_post" required>' + inner_text + '</textarea>';
+		});
+		$('section.post_main a').replaceWith(function(){
+			return '<input name="rubric" value="' + $('article.rubric_post').html().slice(9) + '">';
+		});
+		$('h3.post_tit').replaceWith(function(){
+			return '<input name="title" value="' + $(this).html() + '"><br>';
+		});
+		$('input[type="submit"], input[type="button"]').slideUp();
+		$('<input type="submit" value="Сохранить" class="but_read">').appendTo('section.post_main form');
+	});
 	//Преобразование месяцев
 	function month(name) {
 		switch(name) {

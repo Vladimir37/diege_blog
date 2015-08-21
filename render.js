@@ -79,6 +79,7 @@ function renderRes(res, name) {
 			console.log(err);
 		}
 		else {
+			res.charset = 'utf-8';
 			res.end(resp);
 		}
 	});
@@ -167,7 +168,7 @@ function ribbon_color(type, col_1, col_2) {
 };
 
 //Рендер поста
-function renderPost(res, num) {
+function renderPost(res, num, status) {
 	db_connect.connect(function() {
 		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 0', function(err, rows) {
 			if(err) {
@@ -194,11 +195,21 @@ function renderPost(res, num) {
 						rows_com.forEach(function(item) {
 							item.date = time.conversion(item.date);
 						});
-						renderJade(res, 'post', rows[0], time_post, rows_com);
+						if(status == 1) {
+							renderJade(res, 'post', rows[0], time_post, rows_com);
+						}
+						else {
+							renderJade(res, 'post_user', rows[0], time_post, rows_com);
+						}
 					});
 				}
 				else {
-					renderJade(res, 'post', rows[0], time_post);
+					if(status == 1) {
+						renderJade(res, 'post', rows[0], time_post);
+					}
+					else {
+						renderJade(res, 'post_user', rows[0], time_post);
+					}
 				}
 			}
 		});

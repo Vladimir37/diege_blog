@@ -2,18 +2,11 @@ extends layout
 
 block content
 	section.post_main
-		form(action="" method="post")
-			input(type="hidden" name="type" value="1")
-			h3.post_tit=added.name
-			article.time_post=extra
-			a(href="/rubric/" + added.rubric)
-				article.rubric_post Рубрика: #{added.rubric}
-			article.content_post.data_post!=added.text
-	form(action="" method="post")
-		input(type="hidden" name="type" value="2")
-		input(type="submit" value="Удалить").but_read
-	br
-	input(type="button" value="Редактировать")#edit_post.but_read
+		h3.post_tit=added.name
+		article.time_post=extra
+		a(href="/rubric/" + added.rubric)
+			article.rubric_post Рубрика: #{added.rubric}
+		article.content_post.data_post!=added.text
 	section.comment
 		- if(main.comments == 1)
 			article.send_comment
