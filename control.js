@@ -3,6 +3,8 @@ var formidable = require('formidable');
 var mysql = require('mysql');
 var time = require('./time');
 
+var re_num = new RegExp(/^[0-9]{1,}$/);
+
 //Имя и порт
 var specific;
 fs.readFile('blog/specification.json', function(err, resp) {
@@ -255,7 +257,7 @@ function editingPost(res, data, num) {
 	if(data.type == 1) {
 		//Редактирование
 		var text = safetyText(data.main_text);
-		var rubric = safetyText(data.rubric);
+		var rubric = safetyText(data.rubric) || 'Без рубрики';
 		var title = safetyText(data.title);
 		db_connect.connect(function() {
 			db_connect.query('UPDATE `' + specific.name + '_post` SET `name` = "' + title + '", `text`="' + text + '", `rubric`="' + rubric + '" WHERE `id`=' + num, function(err) {
@@ -276,6 +278,29 @@ function editingPost(res, data, num) {
 				res.redirect('/');
 			});
 		});
+	}
+	else if(data.type == 3) {
+		//Удаление комментария
+		if(re_num.test(data.numb)) {
+			db_connect.connect(function() {
+				db_connect.query('DELETE FROM `' + specific.name + '_comment` WHERE `id` = ' + data.numb, function(err) {
+					if(err) {
+						console.log(err);
+					}
+					else {
+						db_connect.query('UPDATE `' + specific.name + '_post` SET `comment` = `comment` - 1 WHERE `id`=' + num, function(err) {
+							if(err) {
+								console.log(err);
+							}
+							res.redirect('/post/' + num);
+						});
+					}
+				});
+			});
+		}
+		else {
+			res.redirect('/error');
+		}
 	}
 	else {
 		res.redirect('/error');

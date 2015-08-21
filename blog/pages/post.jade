@@ -4,10 +4,10 @@ block content
 	section.post_main
 		form(action="" method="post")
 			input(type="hidden" name="type" value="1")
-			h3.post_tit=added.name
+			h3.post_tit!=added.name
 			article.time_post=extra
 			a(href="/rubric/" + added.rubric)
-				article.rubric_post Рубрика: #{added.rubric}
+				article.rubric_post Рубрика: !{added.rubric}
 			article.content_post.data_post!=added.text
 	form(action="" method="post")
 		input(type="hidden" name="type" value="2")
@@ -26,4 +26,4 @@ block content
 	-if(extra2)
 		- for(var i = 0; i < extra2.length; i++)
 			//- Поставить проверку на авторство блога!
-			mixin comment(extra2[i].autor_name, extra2[i].date, extra2[i].text)
+			mixin comment_admin(extra2[i].autor_name, extra2[i].date, extra2[i].text, extra2[i].id)

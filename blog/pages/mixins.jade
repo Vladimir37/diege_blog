@@ -1,4 +1,4 @@
-//- Пост для любого
+//- Пост
 mixin post(name, text, date, comments, link, branch)
 			section.post
 				h3.post_tit=name
@@ -13,25 +13,6 @@ mixin post(name, text, date, comments, link, branch)
 				a(href=link)
 					article.but_read Читать
 				article.clearfix
-//- Пост для админа
-mixin post_adm(name, text, date, comments, link, branch)
-			section.post
-				h3.post_tit=name
-				article.info
-					article.date.in=date
-					article.branch.in
-						a(href=branch)=branch
-					article.comments.in 
-						a(href=link) #{comments} комментариев
-				article.data_post
-					p=text
-				article.edit_post
-					a(href=date) Удалить
-					br
-					a(href=date) Редактировать
-				a(href=link)
-					article.but_read Читать
-					article.clearfix
 //- Комментарий
 mixin comment(name, date, text)
 	article.comment_post
@@ -39,6 +20,18 @@ mixin comment(name, date, text)
 			article.comm_name=name
 			article.comm_date=date
 		article.comm_text!=text
+//- Комментарий для админа
+mixin comment_admin(name, date, text, id)
+	article.comment_post
+		article.comm_head
+			article.comm_name=name
+			article.comm_date=date
+		article.comm_text!=text
+		article.comm_control
+			form(action="" method="post")
+				input(type="hidden" name="type" value="3")
+				input(type="hidden" name="numb" value=id)
+				input(type="submit" value="Удалить").but_read
 //- Статья в шапке
 mixin link(id, name, db_name)
 	article.link

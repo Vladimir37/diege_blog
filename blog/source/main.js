@@ -116,7 +116,6 @@ $(document).ready(function() {
 	$.ajax('/panel_data', {
 		dataType: 'json',
 		success: function(data) {
-			console.log(data);
 			if(data.news) {
 				//Отображение новостей
 				$('<article class="pan pan_news"></article>').appendTo('section.panel');
@@ -140,7 +139,7 @@ $(document).ready(function() {
 				for(k in data.archives_data) {
 					$('<a href="/year/' + k + '"><article class="pan pan_list pan_year">' + k + '</article></a>').appendTo('article.pan_arh');
 					data.archives_data[k].forEach(function(item) {
-						$('<a href="/month/' + item + '"><article class="pan pan_list">' + month(item) + '</article></a>').appendTo('article.pan_arh');
+						$('<a href="/month/' + item + '"><article class="pan pan_list pan_month">' + month(item) + '</article></a>').appendTo('article.pan_arh');
 					});
 				}
 			}
@@ -164,10 +163,10 @@ $(document).ready(function() {
 			return '<textarea name="main_text" class="content_post data_post" required>' + inner_text + '</textarea>';
 		});
 		$('section.post_main a').replaceWith(function(){
-			return '<input name="rubric" value="' + $('article.rubric_post').html().slice(9) + '">';
+			return '<input name="rubric" value="' + $('article.rubric_post').html().slice(9) + '" pattern="^[a-zA-Zа-яА-Я0-9\ ]{1,20}$">';
 		});
 		$('h3.post_tit').replaceWith(function(){
-			return '<input name="title" value="' + $(this).html() + '"><br>';
+			return '<input name="title" value="' + $(this).html() + '" pattern="^[a-zA-Zа-яА-Я0-9\ \?\!\.]{1,20}$" required><br>';
 		});
 		$('input[type="submit"], input[type="button"]').slideUp();
 		$('<input type="submit" value="Сохранить" class="but_read">').appendTo('section.post_main form');
