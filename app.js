@@ -47,7 +47,7 @@ app.get('/post/:name', function(req, res) {
 	if(render.auth_control(req.cookies[auth_cookie])) {
 		var name = req.params.name;
 		if(re_num.test(name)) {
-			render.post(res, name, 1);
+			render.post(res, name, 1, req.cookies);
 		}
 		else {
 			res.redirect('/error');
@@ -56,7 +56,7 @@ app.get('/post/:name', function(req, res) {
 	else {
 		var name = req.params.name;
 		if(re_num.test(name)) {
-			render.post(res, name, 0);
+			render.post(res, name, 0, req.cookies);
 		}
 		else {
 			res.redirect('/error');
@@ -88,7 +88,7 @@ app.post('/post/:name', function(req, res) {
 		}
 	}
 	else {
-		control.add_comment(req, res, name);
+		control.add_comment(req, res, name, req.cookies);
 	}
 });
 app.get('/rubric/:name', function(req, res) {

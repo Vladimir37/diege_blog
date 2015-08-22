@@ -4,6 +4,7 @@ var mysql = require('mysql');
 var time = require('./time');
 
 var re_num = new RegExp(/^[0-9]{1,}$/);
+var re_space = new RegExp(/^[\ ]{1,}$/);
 
 //Имя и порт
 var specific;
@@ -107,7 +108,7 @@ function add_post(req, res) {
 				img_num++;
 			}
 		};
-		if(fields.rubric == '' || fields.rubric == ' ' || fields.rubric == '  ' || fields.rubric == '	') {
+		if(re_space.test(fields.rubric)) {
 			var rubric = 'Без рубрики';
 		}
 		else {
@@ -169,13 +170,20 @@ function add_post(req, res) {
 };
 
 //Добавление комментария
-function add_comment(req, res, num) {
+function add_comment(req, res, num, login) {
 	var content = safetyText(req.body.comment);
 	var author_type;
 	var author;
-	//Задать автора из куков
-	//ОБЯЗАТЕЛЬНО!
-	if(req.body.name == '' || req.body.name == ' ') {
+	if(req.body.author) {
+		for(k in login) {
+			if(k != 'aut.diege') {
+				author = k.slice(4, -6);
+				break;
+			}
+		}
+		author_type = 1;
+	}
+	else if(req.body.name == '' || re_space.test(req.body.name) || req.body.name.length > 20) {
 		author = 'Аноним';
 		author_type = 0;
 	}

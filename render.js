@@ -49,7 +49,7 @@ function auth_control(cookie) {
 };
 
 //Рендеринг jade
-function renderJade(res, name, addon, extra, extra2) {
+function renderJade(res, name, addon, extra, extra2, extra3) {
 	fs.readFile('blog/blogger.json', function(err, data) {
 	if(err) {
 		console.log(err);
@@ -59,6 +59,7 @@ function renderJade(res, name, addon, extra, extra2) {
 		frame.added = addon;
 		frame.extra = extra;
 		frame.extra2 = extra2;
+		frame.extra3 = extra3;
 		jade.renderFile('blog/pages/' + name + '.jade', frame, function(error, resp) {
 			if(err) {
 				console.log(error);
@@ -168,7 +169,7 @@ function ribbon_color(type, col_1, col_2) {
 };
 
 //Рендер поста
-function renderPost(res, num, status) {
+function renderPost(res, num, status, login) {
 	db_connect.connect(function() {
 		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 0', function(err, rows) {
 			if(err) {
@@ -178,6 +179,17 @@ function renderPost(res, num, status) {
 				res.redirect('/error');
 			}
 			else {
+				//Проверка на залогиненность в системе
+				var login_name;
+				if(login['aut.diege']) {
+					for(k in login) {
+						if(k != 'aut.diege') {
+							login_name = k.slice(4, -6);
+							break;
+						}
+					}
+				}
+				//Конец проверки
 				var time_post = time.conversion(rows[0].date);
 				var img_arr;
 				if(rows[0].imgs) {
@@ -196,19 +208,19 @@ function renderPost(res, num, status) {
 							item.date = time.conversion(item.date);
 						});
 						if(status == 1) {
-							renderJade(res, 'post', rows[0], time_post, rows_com);
+							renderJade(res, 'post', rows[0], time_post, rows_com, login_name);
 						}
 						else {
-							renderJade(res, 'post_user', rows[0], time_post, rows_com);
+							renderJade(res, 'post_user', rows[0], time_post, rows_com, login_name);
 						}
 					});
 				}
 				else {
 					if(status == 1) {
-						renderJade(res, 'post', rows[0], time_post);
+						renderJade(res, 'post', rows[0], time_post, null, login_name);
 					}
 					else {
-						renderJade(res, 'post_user', rows[0], time_post);
+						renderJade(res, 'post_user', rows[0], time_post, null, login_name);
 					}
 				}
 			}
