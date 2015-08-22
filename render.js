@@ -98,6 +98,7 @@ function setting(res) {
 			res.write('h1 {text-align: ' + align(frame.head.one_or) + '; color: ' + frame.head.one_col + ';}\n');
 			res.write('h2 {text-align: ' + align(frame.head.two_or) + '; color: ' + frame.head.two_col + ';}\n');
 			res.write('.ribbon {background: ' + ribbon_color(frame.top_panel.back_type, frame.top_panel.back_color_f, frame.top_panel.back_color_s) + '; color: ' + frame.top_panel.color + '; height: ' + frame.top_panel.height * 50 + 'px;}\n');
+			res.write('.but_adm {background: ' + ribbon_color(frame.top_panel.back_type, frame.top_panel.back_color_f, frame.top_panel.back_color_s) + '; color: ' + frame.top_panel.color + ';}\n');
 			res.write('nav {line-height: ' + frame.top_panel.height * 50 + 'px;}\n');
 			res.write('.panel {color: ' + frame.main_panel.color + '}\n');
 			res.write('.pan_title {background: ' + frame.main_panel.back_title + '}\n');
@@ -122,7 +123,7 @@ function setting(res) {
 			}
 			res.write('}\n')
 			if(frame.main_panel.position == 1) {
-				res.write('.content {float: right;} .panel {float: left;}');
+				res.write('.content {float: right;} .panel {float: left;}\n.button_admin {right: 0;}\n');
 			}
 			else {
 				res.write('.content {float: left;} .panel {float: right;}');
@@ -409,18 +410,18 @@ function handlingList(res, rows, cols, num, type, pool) {
 };
 
 //Рендер JSON объекта с данными о панели
-function panel(res) {
+function panel(res, cookie) {
 	fs.readFile('blog/blogger.json', function(err, data) {
 		if(err) {
 			console.log(err);
 		}
 		else {
+			var panel_data = {};
 			frame = JSON.parse(data);
 			var readiness = 0;
 			if(frame.main_panel.enabled == 1) {
 				//Основное
 				res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
-				var panel_data = {};
 				db_connect.connect(function() {
 					if(frame.main_panel.news == 2) {
 						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC LIMIT 10', function(err, rows) {
@@ -496,11 +497,41 @@ function panel(res) {
 						readiness++;
 						checkPanel(res, readiness, panel_data);
 					}
+					//Кнопки контроля
+					if(cookie) {
+						panel_data.admin = true;
+						readiness++;
+						checkPanel(res, readiness, panel_data);
+					}
+					else {
+						readiness++;
+						checkPanel(res, readiness, panel_data);
+					}
 				});
 			}
 			else {
 				//Панель отключена
-				res.end();
+				readiness = 3;
+				if(Object.keys(frame.top_panel.articles) != '') {
+					panel_data.links = true;
+					panel_data.links_data = frame.top_panel.articles;
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				else {
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				//Кнопки контроля
+				if(cookie) {
+					panel_data.admin = true;
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				else {
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
 			}
 		}
 	});
@@ -544,7 +575,7 @@ function unique(arr) {
 
 //Проверка завершения формирования JSONа панели
 function checkPanel(res, num, obj) {
-	if(num == 4) {
+	if(num == 5) {
 		var panel_result = JSON.stringify(obj);
 		res.end(panel_result);
 	}

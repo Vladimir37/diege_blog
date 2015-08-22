@@ -30,8 +30,10 @@ body {
 			width: 100%;
 		}
 			.content {
+				margin-top: 20px;
 				.post_main {
 					white-space: pre-wrap;
+					padding-top: 10px;
 					.content_post {
 						margin: 30px 0;
 					}
@@ -47,8 +49,12 @@ body {
 					a {
 						text-decoration: none;
 					}
+					h2 {
+						padding-top: 10px;
+					}
 					h3 {
 						font-size: 25px;
+						//padding-top: 10px;
 					}
 					img {
 						max-width: 100%;
@@ -57,6 +63,9 @@ body {
 				.post {
 					margin-bottom: 20px;
 					border-bottom: 1px solid black;
+					.post_tit {
+						padding-top: 10px;
+					}
 					.in {
 						display: inline-block;
 						padding: 0 5px;
@@ -78,6 +87,7 @@ body {
 				}
 			}
 			.panel {
+				margin-top: -30px;
 				.pan {
 					width: 100%;
 					a {
@@ -118,6 +128,7 @@ body {
 	}
 }
 .system {
+	margin-top: 30px;
 	.editing {
 		width: 960px;
 		margin: 0 auto;
@@ -360,4 +371,18 @@ textarea.content_post.data_post {
 	width: 100%;
 	resize: none;
 	height: 400px;
+}
+.button_admin {
+	width: 50%;
+	position: absolute;
+	display: none;
+	.but_adm {
+		display: inline-block;
+		padding: 5px;
+		margin-right: 10px;
+		border-radius: 0 0 15px 15px;
+	}
+}
+.control_blog {
+	text-align: center;
 }

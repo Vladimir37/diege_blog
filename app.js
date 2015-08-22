@@ -231,7 +231,7 @@ app.get('/settings', function(req, res) {
 	render.setting(res);
 });
 app.get('/panel_data', function(req, res) {
-	render.panel(res);
+	render.panel(res, render.auth_control(req.cookies[auth_cookie]));
 });
 app.post('/edit_pic', function(req, res) {
 	if(render.auth_control(req.cookies[auth_cookie])) {
@@ -254,6 +254,14 @@ app.get('/background', function(req, res) {
 		fs.readdir('blog/source/back-blog/', function(err, files) {
 			render.jade(res, 'background', files);
 		});
+	}
+	else {
+		res.redirect('/error');
+	}
+});
+app.get('/control', function(req, res) {
+	if(render.auth_control(req.cookies[auth_cookie])) {
+		render.jade(res, 'control')
 	}
 	else {
 		res.redirect('/error');

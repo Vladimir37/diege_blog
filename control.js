@@ -171,44 +171,49 @@ function add_post(req, res) {
 
 //Добавление комментария
 function add_comment(req, res, num, login) {
-	var content = safetyText(req.body.comment);
-	var author_type;
-	var author;
-	if(req.body.author) {
-		for(k in login) {
-			if(k != 'aut.diege') {
-				author = k.slice(4, -6);
-				break;
-			}
-		}
-		author_type = 1;
-	}
-	else if(req.body.name == '' || re_space.test(req.body.name) || req.body.name.length > 20) {
-		author = 'Аноним';
-		author_type = 0;
+	if(!req.body.comment || re_space.test(req.body.comment)) {
+		res.redirect('/error');
 	}
 	else {
-		author = safetyText(req.body.name);
-		author_type = 0;
+		var content = safetyText(req.body.comment);
+		var author_type;
+		var author;
+		if(req.body.author) {
+			for(k in login) {
+				if(k != 'aut.diege') {
+					author = k.slice(4, -6);
+					break;
+				}
+			}
+			author_type = 1;
+		}
+		else if(req.body.name == '' || re_space.test(req.body.name) || req.body.name.length > 20) {
+			author = 'Аноним';
+			author_type = 0;
+		}
+		else {
+			author = safetyText(req.body.name);
+			author_type = 0;
+		}
+		var curTime = time.current();
+		db_connect.connect(function() {
+			db_connect.query('INSERT INTO `' + specific.name + '_comment` (`article`, `text`, `author_blog`, `autor_name`, `date`) VALUES (' + num + ', "' + content + '", ' + author_type + ', "' + author + '", ' + curTime + ')', function(err) {
+				if(err) {
+					console.log(err);
+				}
+				else {
+					db_connect.query('UPDATE `' + specific.name + '_post` SET `comment`= `comment` + 1 WHERE `id`= ' + num, function(err) {
+						if(err) {
+							console.log(err);
+						}
+						else {
+							res.redirect('/post/' + num);
+						}
+					})
+				}
+			})
+		});
 	}
-	var curTime = time.current();
-	db_connect.connect(function() {
-		db_connect.query('INSERT INTO `' + specific.name + '_comment` (`article`, `text`, `author_blog`, `autor_name`, `date`) VALUES (' + num + ', "' + content + '", ' + author_type + ', "' + author + '", ' + curTime + ')', function(err) {
-			if(err) {
-				console.log(err);
-			}
-			else {
-				db_connect.query('UPDATE `' + specific.name + '_post` SET `comment`= `comment` + 1 WHERE `id`= ' + num, function(err) {
-					if(err) {
-						console.log(err);
-					}
-					else {
-						res.redirect('/post/' + num);
-					}
-				})
-			}
-		})
-	});
 };
 
 //Операции с пулом

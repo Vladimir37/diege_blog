@@ -149,6 +149,10 @@ $(document).ready(function() {
 					$('<a href="/post/' + data.links_data[k] + '">' + '<nav class="link_art">' + k + '</nav></a>').appendTo('.ribbon');
 				};
 			}
+			//Отображение кнопок
+			if(data.admin) {
+				$('.button_admin').show();
+			}
 		}
 	});
 	//Редактирование постов
@@ -171,6 +175,10 @@ $(document).ready(function() {
 		$('input[type="submit"], input[type="button"]').slideUp();
 		$('<input type="submit" value="Сохранить" class="but_read">').appendTo('section.post_main form');
 	});
+	//Отключение панели при настройках
+	if($('.system').text()) {
+		$('.panel').hide();
+	};
 	//Преобразование месяцев
 	function month(name) {
 		switch(name) {
