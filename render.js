@@ -171,6 +171,7 @@ function ribbon_color(type, col_1, col_2) {
 
 //Рендер поста
 function renderPost(res, num, status, login) {
+	//console.log('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 0');
 	db_connect.connect(function() {
 		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 0', function(err, rows) {
 			if(err) {
