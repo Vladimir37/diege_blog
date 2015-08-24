@@ -3,6 +3,7 @@ var express = require('express');
 var parser = require('body-parser');
 var fs = require('fs');
 var cookie = require('cookie-parser');
+var favicon = require('serve-favicon');
 
 var router = require('./router');
 var render = require('./render');
@@ -12,6 +13,7 @@ var time = require('./time');
 var app = express();
 app.use(parser());
 app.use(cookie());
+app.use(favicon('blog/source/img/favicon.ico'));
 
 var re_num = new RegExp(/^[0-9]{1,}$/);
 var re_year = new RegExp(/^[0-9]{4,4}$/);

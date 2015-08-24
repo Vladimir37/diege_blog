@@ -108,7 +108,7 @@ function add_post(req, res) {
 				img_num++;
 			}
 		};
-		if(re_space.test(fields.rubric)) {
+		if(!fields.rubric || re_space.test(fields.rubric)) {
 			var rubric = 'Без рубрики';
 		}
 		else {
@@ -128,29 +128,40 @@ function add_post(req, res) {
 					else {
 						var id_post;
 						if(rows == '') {
-							id_post = 1;
+							db_connect.query('SHOW TABLE STATUS FROM `diege_main` WHERE `Name` = "' + specific.name + '_post"', function(err, rows_ai) {
+								if(err) {
+									console.log(err);
+								}
+								else {
+									id_post = rows_ai[0].Auto_increment;
+									createImgFolder();
+								}
+							});
 						}
 						else {
 							id_post = ++rows[0].id;
+							createImgFolder();
 						}
-						fs.mkdir('blog/source/images/' + id_post, function(err) {
-							if(err) {
-								console.log(err);
-							}
-							else {
-								for(var i = 0; i < normal_imgs_name.length; i++) {
-									fs.rename(normal_imgs_path[i], 'blog/source/images/' + id_post + '/' + normal_imgs_name[i]);
+						function createImgFolder() {
+							fs.mkdir('blog/source/images/' + id_post, function(err) {
+								if(err) {
+									console.log(err);
 								}
-								db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`, `pool`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '", ' + pool + ')', function(err) {
-									if(err) {
-										console.log(err);
+								else {
+									for(var i = 0; i < normal_imgs_name.length; i++) {
+										fs.rename(normal_imgs_path[i], 'blog/source/images/' + id_post + '/' + normal_imgs_name[i]);
 									}
-									else {
-										res.redirect('/');
-									}
-								});
-							}
-						});
+									db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`, `pool`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '", ' + pool + ')', function(err) {
+										if(err) {
+											console.log(err);
+										}
+										else {
+											res.redirect('/');
+										}
+									});
+								}
+							});
+						};
 					}
 				})
 			});

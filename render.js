@@ -181,7 +181,7 @@ function renderPost(res, num, status, login) {
 				res.redirect('/error');
 			}
 			else {
-				//Проверка на залогиненность в системе
+				//Проверка на авторизацию в системе
 				var login_name;
 				if(login['aut.diege']) {
 					for(k in login) {
@@ -281,7 +281,8 @@ function list(res, type, num, obj) {
 					var cols = Math.ceil(rows.length / 10) - 1;
 					var need_rows = rows.slice(num*10, num*10+10);
 					if(need_rows == '') {
-						res.redirect('/error')
+						//Нет постов
+						renderJade(res, 'new_blog');
 					}
 					else {
 						handlingList(res, need_rows, cols, num, '/index/');
