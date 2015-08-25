@@ -9,6 +9,7 @@ var router = require('./router');
 var render = require('./render');
 var control = require('./control');
 var time = require('./time');
+var connect = require('./disconnect');
 
 var app = express();
 app.use(parser());
@@ -206,3 +207,14 @@ function auth_cont(req, res, admin, admin_arg, user, user_arg) {
 		}
 	}
 };
+
+//Обработка ошибок в базе
+fs.readFile('blog/db.json', function(err, resp) {
+	if(err) {
+		console.log(err);
+	}
+	else {
+		db_connect = JSON.parse(resp);
+		connect.activate(db_connect);
+	}
+});

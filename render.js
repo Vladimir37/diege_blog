@@ -2,18 +2,23 @@ var fs = require('fs');
 var jade = require('jade');
 var mysql = require('mysql');
 var Crypt = require('easy-encryption');
+
 var time = require('./time');
+var connect = require('./disconnect');
 
 //Подключение к базе
-var db_connect;
-fs.readFile('blog/db.json', function(err, resp) {
-	if(err) {
-		console.log(err);
-	}
-	else {
-		db_connect = mysql.createConnection(JSON.parse(resp));
-	}
-});
+setTimeout(function() {
+	db_connect = connect.connection();
+}, 200);
+
+// fs.readFile('blog/db.json', function(err, resp) {
+// 	if(err) {
+// 		console.log(err);
+// 	}
+// 	else {
+// 		db_connect = mysql.createConnection(JSON.parse(resp));
+// 	}
+// });
 
 //Данные расшифровки куков
 var crypt = new Crypt({
@@ -171,214 +176,199 @@ function ribbon_color(type, col_1, col_2) {
 
 //Рендер поста
 function renderPost(res, num, status, login) {
-	//console.log('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 0');
-	db_connect.connect(function() {
-		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 0', function(err, rows) {
-			if(err) {
-				console.log(err);
+	db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 0', function(err, rows) {
+		if(err) {
+			console.log(err);
+		}
+		else if(rows == '') {
+			res.redirect('/error');
+		}
+		else {
+			//Проверка на авторизацию в системе
+			var login_name;
+			if(login['aut.diege']) {
+				for(k in login) {
+					if(k != 'aut.diege') {
+						login_name = k.slice(4, -6);
+						break;
+					}
+				}
 			}
-			else if(rows == '') {
-				res.redirect('/error');
+			//Конец проверки
+			var time_post = time.conversion(rows[0].date);
+			var img_arr;
+			if(rows[0].imgs) {
+				img_arr = rows[0].imgs.split('|');
 			}
 			else {
-				//Проверка на авторизацию в системе
-				var login_name;
-				if(login['aut.diege']) {
-					for(k in login) {
-						if(k != 'aut.diege') {
-							login_name = k.slice(4, -6);
-							break;
-						}
-					}
-				}
-				//Конец проверки
-				var time_post = time.conversion(rows[0].date);
-				var img_arr;
-				if(rows[0].imgs) {
-					img_arr = rows[0].imgs.split('|');
-				}
-				else {
-					img_arr = [];
-				}
-				for(var i = 0; i <= img_arr.length; i++) {
-					var i_cur = i + 1;
-					rows[0].text = rows[0].text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + num + '/' + img_arr[i] + '" alt="img">');
-				}
-				if(rows[0].comment != 0) {
-					db_connect.query('SELECT * FROM ' + specific.name + '_comment WHERE `article` = ' + num, function(err, rows_com) {
-						rows_com.forEach(function(item) {
-							item.date = time.conversion(item.date);
-						});
-						if(status == 1) {
-							renderJade(res, 'post', rows[0], time_post, rows_com, login_name);
-						}
-						else {
-							renderJade(res, 'post_user', rows[0], time_post, rows_com, login_name);
-						}
+				img_arr = [];
+			}
+			for(var i = 0; i <= img_arr.length; i++) {
+				var i_cur = i + 1;
+				rows[0].text = rows[0].text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + num + '/' + img_arr[i] + '" alt="img">');
+			}
+			if(rows[0].comment != 0) {
+				db_connect.query('SELECT * FROM ' + specific.name + '_comment WHERE `article` = ' + num, function(err, rows_com) {
+					rows_com.forEach(function(item) {
+						item.date = time.conversion(item.date);
 					});
-				}
-				else {
 					if(status == 1) {
-						renderJade(res, 'post', rows[0], time_post, null, login_name);
+						renderJade(res, 'post', rows[0], time_post, rows_com, login_name);
 					}
 					else {
-						renderJade(res, 'post_user', rows[0], time_post, null, login_name);
+						renderJade(res, 'post_user', rows[0], time_post, rows_com, login_name);
 					}
+				});
+			}
+			else {
+				if(status == 1) {
+					renderJade(res, 'post', rows[0], time_post, null, login_name);
+				}
+				else {
+					renderJade(res, 'post_user', rows[0], time_post, null, login_name);
 				}
 			}
-		});
+		}
 	});
 };
 
 //Рендер поста из пула
 function renderPostPool(res, num) {
-	db_connect.connect(function() {
-		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 1', function(err, rows) {
-			if(err) {
-				console.log(err);
-			}
-			else if(rows == '') {
-				res.redirect('/error');
+	db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `id` = ' + num + ' AND `pool` = 1', function(err, rows) {
+		if(err) {
+			console.log(err);
+		}
+		else if(rows == '') {
+			res.redirect('/error');
+		}
+		else {
+			var time_post = time.conversion(rows[0].date);
+			var img_arr;
+			if(rows[0].imgs) {
+				img_arr = rows[0].imgs.split('|');
 			}
 			else {
-				var time_post = time.conversion(rows[0].date);
-				var img_arr;
-				if(rows[0].imgs) {
-					img_arr = rows[0].imgs.split('|');
-				}
-				else {
-					img_arr = [];
-				}
-				for(var i = 0; i <= img_arr.length; i++) {
-					var i_cur = i + 1;
-					rows[0].text = rows[0].text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + num + '/' + img_arr[i] + '" alt="img">');
-				}
-				if(rows[0].comment != 0) {
-					db_connect.query('SELECT * FROM ' + specific.name + '_comment WHERE `article` = ' + num, function(err, rows_com) {
-						rows_com.forEach(function(item) {
-							item.date = time.conversion(item.date);
-						});
-						renderJade(res, 'post_pool', rows[0], time_post, rows_com);
-					});
-				}
-				else {
-					renderJade(res, 'post_pool', rows[0], time_post);
-				}
+				img_arr = [];
 			}
-		});
+			for(var i = 0; i <= img_arr.length; i++) {
+				var i_cur = i + 1;
+				rows[0].text = rows[0].text.replace('[ЗагруженноеИзображение' + i_cur + ']', '<img src="/source/images/' + num + '/' + img_arr[i] + '" alt="img">');
+			}
+			if(rows[0].comment != 0) {
+				db_connect.query('SELECT * FROM ' + specific.name + '_comment WHERE `article` = ' + num, function(err, rows_com) {
+					rows_com.forEach(function(item) {
+						item.date = time.conversion(item.date);
+					});
+					renderJade(res, 'post_pool', rows[0], time_post, rows_com);
+				});
+			}
+			else {
+				renderJade(res, 'post_pool', rows[0], time_post);
+			}
+		}
 	});
 };
 
 //Рендер списка постов
 function list(res, type, num, obj) {
 	if(type == 1) {
-		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
-				if(err) {
-					console.log(err);
+		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
+			if(err) {
+				console.log(err);
+			}
+			else {
+				var cols = Math.ceil(rows.length / 10) - 1;
+				var need_rows = rows.slice(num*10, num*10+10);
+				if(need_rows == '') {
+					//Нет постов
+					renderJade(res, 'new_blog');
 				}
 				else {
-					var cols = Math.ceil(rows.length / 10) - 1;
-					var need_rows = rows.slice(num*10, num*10+10);
-					if(need_rows == '') {
-						//Нет постов
-						renderJade(res, 'new_blog');
-					}
-					else {
-						handlingList(res, need_rows, cols, num, '/index/');
-					}
+					handlingList(res, need_rows, cols, num, '/index/');
 				}
-			})
-		});
+			}
+		})
 	}
 	else if(type == 2) {
-		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `rubric` = "' + obj + '" AND `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
-				if(err) {
-					console.log(err);
+		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `rubric` = "' + obj + '" AND `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
+			if(err) {
+				console.log(err);
+			}
+			else {
+				var cols = Math.ceil(rows.length / 10) - 1;
+				var need_rows = rows.slice(num*10, num*10+10);
+				if(need_rows == '') {
+					res.redirect('/error')
 				}
 				else {
-					var cols = Math.ceil(rows.length / 10) - 1;
-					var need_rows = rows.slice(num*10, num*10+10);
-					if(need_rows == '') {
-						res.redirect('/error')
-					}
-					else {
-						handlingList(res, need_rows, cols, num, '/rubric/' + obj + '/');
-					}
+					handlingList(res, need_rows, cols, num, '/rubric/' + obj + '/');
 				}
-			})
-		});
+			}
+		})
 	}
 	else if(type == 3) {
-		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, all_rows) {
-				if(err) {
-					console.log(err);
+		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, all_rows) {
+			if(err) {
+				console.log(err);
+			}
+			else {
+				var rows = [];
+				all_rows.forEach(function(item) {
+					var date_arr = time.conversion_arr(item.date);
+					if(date_arr[2] == obj) {
+						rows.push(item);
+					}
+				});
+				var cols = Math.ceil(rows.length / 10) - 1;
+				var need_rows = rows.slice(num*10, num*10+10);
+				if(need_rows == '') {
+					res.redirect('/error')
 				}
 				else {
-					var rows = [];
-					all_rows.forEach(function(item) {
-						var date_arr = time.conversion_arr(item.date);
-						if(date_arr[2] == obj) {
-							rows.push(item);
-						}
-					});
-					var cols = Math.ceil(rows.length / 10) - 1;
-					var need_rows = rows.slice(num*10, num*10+10);
-					if(need_rows == '') {
-						res.redirect('/error')
-					}
-					else {
-						handlingList(res, need_rows, cols, num, '/year/' + obj + '/');
-					}
+					handlingList(res, need_rows, cols, num, '/year/' + obj + '/');
 				}
-			});
+			}
 		});
 	}
 	else if(type == 4) {
-		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, all_rows) {
-				if(err) {
-					console.log(err);
+		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, all_rows) {
+			if(err) {
+				console.log(err);
+			}
+			else {
+				var rows = [];
+				all_rows.forEach(function(item) {
+					var date_arr = time.conversion_arr(item.date);
+					if(date_arr[1] == obj) {
+						rows.push(item);
+					}
+				});
+				var cols = Math.ceil(rows.length / 10) - 1;
+				var need_rows = rows.slice(num*10, num*10+10);
+				if(need_rows == '') {
+					res.redirect('/error')
 				}
 				else {
-					var rows = [];
-					all_rows.forEach(function(item) {
-						var date_arr = time.conversion_arr(item.date);
-						if(date_arr[1] == obj) {
-							rows.push(item);
-						}
-					});
-					var cols = Math.ceil(rows.length / 10) - 1;
-					var need_rows = rows.slice(num*10, num*10+10);
-					if(need_rows == '') {
-						res.redirect('/error')
-					}
-					else {
-						handlingList(res, need_rows, cols, num, '/month/' + obj + '/');
-					}
+					handlingList(res, need_rows, cols, num, '/month/' + obj + '/');
 				}
-			});
+			}
 		});
 	}
 	else if(type == 5) {
-		db_connect.connect(function() {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 1 ORDER BY `date` DESC', function(err, rows) {
-				if(err) {
-					console.log(err);
+		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 1 ORDER BY `date` DESC', function(err, rows) {
+			if(err) {
+				console.log(err);
+			}
+			else {
+				var cols = Math.ceil(rows.length / 10) - 1;
+				var need_rows = rows.slice(num*10, num*10+10);
+				if(need_rows == '') {
+					res.redirect('/error')
 				}
 				else {
-					var cols = Math.ceil(rows.length / 10) - 1;
-					var need_rows = rows.slice(num*10, num*10+10);
-					if(need_rows == '') {
-						res.redirect('/error')
-					}
-					else {
-						handlingList(res, need_rows, cols, num, '/pool/', true);
-					}
+					handlingList(res, need_rows, cols, num, '/pool/', true);
 				}
-			})
+			}
 		});
 	}
 };
@@ -424,92 +414,90 @@ function panel(res, cookie) {
 			if(frame.main_panel.enabled == 1) {
 				//Основное
 				res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
-				db_connect.connect(function() {
-					if(frame.main_panel.news == 2) {
-						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC LIMIT 10', function(err, rows) {
-							if(err) {
-								console.log(err);
-							}
-							else {
-								panel_data.news = true;
-								panel_data.news_data = {};
-								rows.forEach(function(item) {
-									panel_data.news_data['s' + item.id] = item.name;
-								});
-								readiness++;
-								checkPanel(res, readiness, panel_data);
-							}
-						})
-					}
-					else {
-						readiness++;
-						checkPanel(res, readiness, panel_data);
-					}
-					if(frame.main_panel.brenchs == 2) {
-						db_connect.query('SELECT DISTINCT `rubric` FROM ' + specific.name + '_post', function(err, rows) {
-							if(err) {
-								console.log(err);
-							}
-							else {
-								panel_data.rubric = true;
-								panel_data.rubric_data = [];
-								rows.forEach(function(item) {
-									panel_data.rubric_data.push(item.rubric);
-								});
-								readiness++;
-								checkPanel(res, readiness, panel_data);
-							}
-						});
-					}
-					else {
-						readiness++;
-						checkPanel(res, readiness, panel_data);
-					}
-					if(frame.main_panel.archives == 2) {
-						db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
-							panel_data.archives = true;
-							panel_data.archives_data = {};
+				if(frame.main_panel.news == 2) {
+					db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC LIMIT 10', function(err, rows) {
+						if(err) {
+							console.log(err);
+						}
+						else {
+							panel_data.news = true;
+							panel_data.news_data = {};
 							rows.forEach(function(item) {
-								var date_res = time.conversion_arr(item.date);
-								panel_data.archives_data[date_res[2]] = [];
+								panel_data.news_data['s' + item.id] = item.name;
 							});
-							rows.forEach(function(item) {
-								var date_res = time.conversion_arr(item.date);
-								panel_data.archives_data[date_res[2]].push(date_res[1]);
-							});
-							for(k in panel_data.archives_data) {
-								panel_data.archives_data[k] = unique(panel_data.archives_data[k]);
-							}
 							readiness++;
 							checkPanel(res, readiness, panel_data);
+						}
+					})
+				}
+				else {
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				if(frame.main_panel.brenchs == 2) {
+					db_connect.query('SELECT DISTINCT `rubric` FROM ' + specific.name + '_post', function(err, rows) {
+						if(err) {
+							console.log(err);
+						}
+						else {
+							panel_data.rubric = true;
+							panel_data.rubric_data = [];
+							rows.forEach(function(item) {
+								panel_data.rubric_data.push(item.rubric);
+							});
+							readiness++;
+							checkPanel(res, readiness, panel_data);
+						}
+					});
+				}
+				else {
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				if(frame.main_panel.archives == 2) {
+					db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
+						panel_data.archives = true;
+						panel_data.archives_data = {};
+						rows.forEach(function(item) {
+							var date_res = time.conversion_arr(item.date);
+							panel_data.archives_data[date_res[2]] = [];
 						});
-					}
-					else {
+						rows.forEach(function(item) {
+							var date_res = time.conversion_arr(item.date);
+							panel_data.archives_data[date_res[2]].push(date_res[1]);
+						});
+						for(k in panel_data.archives_data) {
+							panel_data.archives_data[k] = unique(panel_data.archives_data[k]);
+						}
 						readiness++;
 						checkPanel(res, readiness, panel_data);
-					}
-					//Рендер ссылок на статьи в ленте
-					if(Object.keys(frame.top_panel.articles) != '') {
-						panel_data.links = true;
-						panel_data.links_data = frame.top_panel.articles;
-						readiness++;
-						checkPanel(res, readiness, panel_data);
-					}
-					else {
-						readiness++;
-						checkPanel(res, readiness, panel_data);
-					}
-					//Кнопки контроля
-					if(cookie) {
-						panel_data.admin = true;
-						readiness++;
-						checkPanel(res, readiness, panel_data);
-					}
-					else {
-						readiness++;
-						checkPanel(res, readiness, panel_data);
-					}
-				});
+					});
+				}
+				else {
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				//Рендер ссылок на статьи в ленте
+				if(Object.keys(frame.top_panel.articles) != '') {
+					panel_data.links = true;
+					panel_data.links_data = frame.top_panel.articles;
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				else {
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				//Кнопки контроля
+				if(cookie) {
+					panel_data.admin = true;
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
+				else {
+					readiness++;
+					checkPanel(res, readiness, panel_data);
+				}
 			}
 			else {
 				//Панель отключена
@@ -549,19 +537,17 @@ function links_render(res) {
 			frame = JSON.parse(data);
 		}
 	});
-	db_connect.connect(function() {
-		db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
-			if(err) {
-				console.log(err);
-			}
-			else {
-				var all_posts = {};
-				rows.forEach(function(item) {
-					all_posts[item.id] = item.id + '. ' + item.name;
-				});
-				renderJade(res, 'links', all_posts);
-			}
-		});
+	db_connect.query('SELECT * FROM ' + specific.name + '_post WHERE `pool` = 0 ORDER BY `date` DESC', function(err, rows) {
+		if(err) {
+			console.log(err);
+		}
+		else {
+			var all_posts = {};
+			rows.forEach(function(item) {
+				all_posts[item.id] = item.id + '. ' + item.name;
+			});
+			renderJade(res, 'links', all_posts);
+		}
 	});
 };
 
