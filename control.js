@@ -20,18 +20,10 @@ fs.readFile('blog/specification.json', function(err, resp) {
 });
 
 //Подключение к базе
+var db_connect;
 setTimeout(function() {
 	db_connect = connect.connection();
 }, 200);
-
-// fs.readFile('blog/db.json', function(err, resp) {
-// 	if(err) {
-// 		console.log(err);
-// 	}
-// 	else {
-// 		db_connect = mysql.createConnection(JSON.parse(resp));
-// 	}
-// });
 
 //Обработка изменений в настройках
 function editing(changed, res) {

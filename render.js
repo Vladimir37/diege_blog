@@ -7,18 +7,10 @@ var time = require('./time');
 var connect = require('./disconnect');
 
 //Подключение к базе
+var db_connect;
 setTimeout(function() {
 	db_connect = connect.connection();
 }, 200);
-
-// fs.readFile('blog/db.json', function(err, resp) {
-// 	if(err) {
-// 		console.log(err);
-// 	}
-// 	else {
-// 		db_connect = mysql.createConnection(JSON.parse(resp));
-// 	}
-// });
 
 //Данные расшифровки куков
 var crypt = new Crypt({
@@ -61,6 +53,8 @@ function renderJade(res, name, addon, extra, extra2, extra3) {
 	}
 	else {
 		frame = JSON.parse(data);
+		var blog_name = specific.name.slice(0, 1).toUpperCase() + specific.name.slice(1);
+		frame.blog_name = blog_name;
 		frame.added = addon;
 		frame.extra = extra;
 		frame.extra2 = extra2;
