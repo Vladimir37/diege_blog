@@ -208,13 +208,19 @@ function auth_cont(req, res, admin, admin_arg, user, user_arg) {
 	}
 };
 
-//Обработка ошибок в базе
+//Подключение к базе
 fs.readFile('blog/db.json', function(err, resp) {
 	if(err) {
 		console.log(err);
 	}
 	else {
-		db_connect = JSON.parse(resp);
-		connect.activate(db_connect);
+		var db_data = JSON.parse(resp);
+		connect.activate(db_data);
 	}
+});
+Object.defineProperty(global, 'db_connect', {
+	get: function() {
+		return connect.connection();
+	},
+	set: function(value) {}
 });

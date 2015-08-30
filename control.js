@@ -19,12 +19,6 @@ fs.readFile('blog/specification.json', function(err, resp) {
 	}
 });
 
-//Подключение к базе
-var db_connect;
-setTimeout(function() {
-	db_connect = connect.connection();
-}, 200);
-
 //Обработка изменений в настройках
 function editing(changed, res) {
 	fs.readFile('blog/blogger.json', function(err, data) {

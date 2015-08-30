@@ -6,12 +6,6 @@ var Crypt = require('easy-encryption');
 var time = require('./time');
 var connect = require('./disconnect');
 
-//Подключение к базе
-var db_connect;
-setTimeout(function() {
-	db_connect = connect.connection();
-}, 200);
-
 //Данные расшифровки куков
 var crypt = new Crypt({
 	secret: 'vladimir_parol_37', 
