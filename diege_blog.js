@@ -135,6 +135,12 @@ app.post('/post_pool/:name', function(req, res) {
 		res.redirect('/error');
 	}
 });
+app.get('/login', function(req, res) {
+	auth_cont(req, res, render.list, [res, 1, 0], render.login, [res]);
+});
+app.post('/login', function(req, res) {
+	control.login(req.body, res);
+});
 app.get('/links', function(req, res) {
 	auth_cont(req, res, render.links, [res]);
 });

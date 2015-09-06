@@ -1,12 +1,16 @@
 var fs = require('fs');
 var formidable = require('formidable');
 var mysql = require('mysql');
+var Crypt = require('easy-encryption');
 
 var time = require('./time');
 var connect = require('./disconnect');
 
 var re_num = new RegExp(/^[0-9]{1,}$/);
 var re_space = new RegExp(/^[\ ]{1,}$/);
+
+//Данные расшифровки куков
+var crypt; 
 
 //Имя и порт
 var specific;
@@ -16,6 +20,10 @@ fs.readFile('blog/specification.json', function(err, resp) {
 	}
 	else {
 		specific = JSON.parse(resp);
+		crypt = new Crypt({
+			secret: specific.password,
+			iterations: 3700
+		});
 	}
 });
 
@@ -111,49 +119,36 @@ function add_post(req, res) {
 		var pool = fields.pool;
 		//Если есть изображения к посту
 		if(img_num != 0) {
-			db_connect.query('SELECT * FROM ' + specific.name + '_post ORDER BY `id` DESC LIMIT 1', function(err, rows) {
+			var id_post;
+			db_connect.query('SHOW TABLE STATUS FROM `diege_main` WHERE `Name` = "' + specific.name + '_post"', function(err, rows_ai) {
 				if(err) {
 					console.log(err);
 				}
 				else {
-					var id_post;
-					if(rows == '') {
-						db_connect.query('SHOW TABLE STATUS FROM `diege_main` WHERE `Name` = "' + specific.name + '_post"', function(err, rows_ai) {
-							if(err) {
-								console.log(err);
-							}
-							else {
-								id_post = rows_ai[0].Auto_increment;
-								createImgFolder();
-							}
-						});
+					id_post = rows_ai[0].Auto_increment;
+					createImgFolder(id_post);
+				}
+			});
+			function createImgFolder(id_post) {
+				fs.mkdir('blog/source/images/' + id_post, function(err) {
+					if(err && err.code != 'EEXIST') {
+						console.log(err);
 					}
 					else {
-						id_post = ++rows[0].id;
-						createImgFolder();
-					}
-					function createImgFolder() {
-						fs.mkdir('blog/source/images/' + id_post, function(err) {
+						for(var i = 0; i < normal_imgs_name.length; i++) {
+							fs.rename(normal_imgs_path[i], 'blog/source/images/' + id_post + '/' + normal_imgs_name[i]);
+						}
+						db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`, `pool`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '", ' + pool + ')', function(err) {
 							if(err) {
 								console.log(err);
 							}
 							else {
-								for(var i = 0; i < normal_imgs_name.length; i++) {
-									fs.rename(normal_imgs_path[i], 'blog/source/images/' + id_post + '/' + normal_imgs_name[i]);
-								}
-								db_connect.query('INSERT INTO `' + specific.name + '_post` (`name`, `text`, `date`, `imgs`, `rubric`, `pool`) VALUES ("' + title + '", "' + content + '", "' + curTime + '", "' + normal_imgs_name.join('|') + '", "' + rubric + '", ' + pool + ')', function(err) {
-									if(err) {
-										console.log(err);
-									}
-									else {
-										res.redirect('/');
-									}
-								});
+								res.redirect('/');
 							}
 						});
-					};
-				}
-			})
+					}
+				});
+			};
 		}
 		//Если пост без изображений
 		else {
@@ -310,6 +305,23 @@ function editingPost(res, data, num) {
 	}
 };
 
+//Авторизация
+function login(data, res) {
+	if(data.login == specific.login && data.pass == specific.password) {
+		var log_params;
+		if(data.remember) {
+			log_params = {maxAge: 1209600000};
+		}
+		var crypt_key = crypt.encrypt(specific.key.toString());
+		res.cookie('aut.' + specific.name + '.diege', crypt_key, log_params);
+		res.cookie('aut.diege', true, log_params);
+		res.redirect('/');
+	}
+	else {
+		res.redirect('/login?unlog')
+	}
+};
+
 //Безопастность текста
 function safetyText(text) {
 	var res = text.replace(/\;/g, '&#59;');
@@ -350,3 +362,4 @@ exports.add_comment = add_comment;
 exports.pool = pool;
 exports.link = link;
 exports.postEdit = editingPost;
+exports.login = login;

@@ -7,10 +7,7 @@ var time = require('./time');
 var connect = require('./disconnect');
 
 //Данные расшифровки куков
-var crypt = new Crypt({
-	secret: 'key', 
-	iterations: 3700
-});
+var crypt; 
 
 //Чтение спецификации
 var specific;
@@ -20,6 +17,10 @@ fs.readFile('blog/specification.json', function(err, resp) {
 	}
 	else {
 		specific = JSON.parse(resp);
+		crypt = new Crypt({
+			secret: specific.password,
+			iterations: 3700
+		});
 	}
 });
 
@@ -539,6 +540,11 @@ function links_render(res) {
 	});
 };
 
+//Рендер страницы входа
+function login(res) {
+	renderJade(res, 'login');
+};
+
 //Только уникальные элементы массива
 function unique(arr) {
 	var obj = {};
@@ -565,4 +571,5 @@ exports.pool_post = renderPostPool;
 exports.list = list;
 exports.panel = panel;
 exports.links = links_render;
+exports.login = login;
 exports.auth_control = auth_control;

@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	section.login
+		form(action="" method="post")
+			input(type="text" name="login" placeholder="Ваш логин" required)
+			br
+			input(type="password" name="pass" placeholder="Ваш пароль" required)
+			br
+			input(type="checkbox" name="remember")#remember
+			label(for="remember") Запомнить меня
+			br
+			input(type="submit" value="Войти").but_read
